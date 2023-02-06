@@ -1,63 +1,52 @@
+#![deny(unsafe_code)]
+
+use std::collections::HashMap;
 use std::ops::Index;
 use json::JsonValue;
-use regex::{Regex};
+use crate::{datastring};
 use crate::nuklid::{Nuklid, ZerfallsArt};
-use crate::nuklid::ZerfallsArt::{Alpha, BetaMinus, BetaPlus, Stable, Unknown};
 
-pub fn deserialize(string: &str) -> Vec<Nuklid> {
-    let parsed = json::parse(string).unwrap();
+//Advanced Nuklid Struct
+pub fn deserialize_ad_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
+    let mut y_achse_map: HashMap<u8, HashMap<u8, Nuklid>> = HashMap::new();
 
-    let json_array: &JsonValue = parsed.entries().next().unwrap().1;
+    // Get the Array Containing the Nuklids
+    let json_array: JsonValue = json::parse(datastring::TEXT).unwrap();
 
-    let mut nuk_vec: Vec<Nuklid> = vec![];
     for i in 0..json_array.len() {
+        //Get Nuklid Json out of the Nuklid Json Array
         let element: &JsonValue = json_array.index(i);
-        let nuklid_struct: Nuklid = translate_to_struct(element);
-        nuk_vec.push(nuklid_struct);
-    }
-    nuk_vec
-}
+        //Parse JSON to Nuklid Struct
+        let nuklid_struct: Nuklid = translate_to_ad_struct(element);
+        //Insert Nuklid into the correct Hashmaps
+        let protonen = nuklid_struct.protonen;
 
-fn translate_to_struct(element: &JsonValue) -> Nuklid {
+        //Insert Nuklid into the correct Hashmaps
+        if !y_achse_map.contains_key(&protonen) {
+            //If no Map for the current number of Protons exists then we create a new Hashmap for
+            //the Isotopes of this Element
+            let new_x_achse_map: HashMap<u8, Nuklid> = HashMap::new();
+            y_achse_map.insert(*&protonen, new_x_achse_map);
+        }
+
+        let x_achse_map: &mut HashMap<u8, Nuklid> = y_achse_map.get_mut(&protonen).unwrap();
+        x_achse_map.insert(nuklid_struct.neutronen, nuklid_struct);
+    }
+    y_achse_map
+    }
+
+fn translate_to_ad_struct(element: &JsonValue) -> Nuklid {
     let mut vec: Vec<(&str, &JsonValue)> = vec![];
     for entry in element.entries() {
         vec.push(entry);
     }
 
+    //TODO Bunch of unsafe unwraps
     Nuklid {
         name: Box::from(vec[2].1.to_string()),
-        neutronen: vec[1].1.as_i32().unwrap(),
-        protonen: vec[0].1.as_i32().unwrap(),
+        neutronen: vec[1].1.as_u8().unwrap(), //n
+        protonen: vec[0].1.as_u8().unwrap(), //z
         life: Box::from(vec[3].1.to_string()),
-        zerfalls_art: translate_zerfalls_art(vec[4].1),
+        zerfalls_art: ZerfallsArt::parse_from_string(vec[4].1.as_str().unwrap()),
     }
-}
-
-fn translate_zerfalls_art(input: &JsonValue) -> ZerfallsArt {
-    let pattern: Regex = Regex::new(r"(b-)|a|d|(b\+)").unwrap();
-    let first_match = pattern.find(&input.as_str().unwrap());
-    if first_match.is_none() {
-        return Unknown;
-    }
-    let first_str: &str = first_match.unwrap().as_str();
-
-    return match first_str {
-        "a" => Alpha,
-        "b-" => BetaMinus,
-        "b+" => BetaPlus,
-        "d" => Stable,
-        &_ => Unknown,
-    }
-
-    //DeadCode
-    // if first_str == "a" {
-    //     return Alpha;
-    // } else if first_str == "b-" {
-    //     return BetaMinus;
-    // } else if first_str == "b+" {
-    //     return BetaPlus;
-    // } else if first_str == "d" {
-    //     return Stable;
-    // }
-    // Unknown
 }
