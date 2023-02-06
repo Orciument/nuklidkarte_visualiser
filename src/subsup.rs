@@ -2,15 +2,15 @@
 #![allow(dead_code)]
 
 //Superscript
-pub fn superscript(input: String) -> String {
-    superscript_base(input, |c| { panic!("Can't convert Char: {} to superscript!", c.to_string())})
+pub fn super_panic(input: String) -> String {
+    super_base(input, |c| { panic!("Can't convert Char: {} to superscript!", c.to_string())})
 }
 
-pub fn superscript_ignore_unable(input: String) -> String {
-    superscript_base(input, |c| {c})
+pub fn super_ignore_unable(input: String) -> String {
+    super_base(input, |c| {c})
 }
 
-fn superscript_base(input: String, else_case: fn(char) -> char) -> String {
+fn super_base(input: String, else_case: fn(char) -> char) -> String {
     let mut output: String = "".to_string();
     for char in input.chars() {
         let sub: char;
@@ -90,15 +90,15 @@ fn superscript_base(input: String, else_case: fn(char) -> char) -> String {
 }
 
 //Subscript
-pub fn subscript(input: String) -> String {
-    subscript_base(input, |c| { panic!("Can't convert Char: {} to subscript!", c.to_string())})
+pub fn sub(input: String) -> String {
+    sub_base(input, |c| { panic!("Can't convert Char: {} to subscript!", c.to_string())})
 }
 
-pub fn subscript_ignore_unable(input: String) -> String {
-    subscript_base(input, |c| {c})
+pub fn sub_ignore_unable(input: String) -> String {
+    sub_base(input, |c| {c})
 }
 
-fn subscript_base(input: String, else_case: fn(char) -> char) -> String {
+fn sub_base(input: String, else_case: fn(char) -> char) -> String {
     let mut output: String = "".to_string();
         for char in input.chars() {
             let sub: char;
