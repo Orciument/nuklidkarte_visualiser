@@ -8,9 +8,11 @@ mod subsup;
 mod datastring;
 mod print_reaction_equation;
 mod math_vec;
+mod draw_legend;
 
 use std::collections::HashMap;
 use nannou::prelude::*;
+use crate::draw_legend::draw_axes;
 use crate::nuklid::{Nuklid};
 use crate::nuklid_json_deserializer::{deserialize_ad_to_map};
 use crate::print_reaction_equation::draw_reaction;
@@ -80,6 +82,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
         draw_reaction(&view, &model.square_size, nuklid, &model.nuklids, 200);
     }
 
+    draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
 
     //Draw color Test
     // draw_card(&draw, 100., 100., _model.square_size, "Tast", BetaPlus.color());
@@ -88,7 +91,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     //Debugging stuff
     view.ellipse().w_h(5.0, 5.0).color(HOTPINK).caps_round();
-    draw.text(&*("FPS: ".to_owned() + &app.fps().to_string())).x_y(110., 10.).color(WHITE).left_justify();
+    draw.text(&*("FPS: ".to_owned() + &app.fps().to_string())).x_y(110., 10.).z(100.).color(WHITE).left_justify();
 
     // put everything on the frame
     view.to_frame(app, &frame).unwrap();
