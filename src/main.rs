@@ -21,8 +21,6 @@ use crate::print_reaction_equation::draw_reaction;
 
 //TODO Write Reaction Equation Elements to Command Line
 //TODO cap upper View limit to size of Nuklid Array
-//TODO Cap translation to window size
-//TODO Draw Achsen
 //TODO Draw Legend
 //TODO Find error (Maybe das start und endpunkt gleich sind?)
 

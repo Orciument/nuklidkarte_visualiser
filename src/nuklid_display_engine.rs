@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 use nannou::Draw;
-use nannou::prelude::{BLACK, WHITE, Srgb};
+use nannou::prelude::{BLACK, WHITE, Srgb, ToPrimitive};
 use nannou::text::FontSize;
 use crate::nuklid::Nuklid;
 use crate::subsup;
@@ -14,27 +14,29 @@ pub const INNER_SCALE: f32 = 0.82;
 pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, &square_size: &f32, translation: &(f32, f32), &window_size: &(u32, u32)) {
     //Zeichne nur alle Reihen die auch überhaupt auf dem Bildschirm angezeigt werden
     //Mit Y Verschiebung/Constrains
-    let x_lower_bound: i32 = (translation.0 / square_size) as i32;
-    let x_upper_bound: i32 = x_lower_bound + (window_size.0 as i32 / square_size as i32);
-    let y_lower_bound: i32 = (translation.1 / square_size) as i32;
-    let y_upper_bound: i32 = y_lower_bound + (window_size.1 as i32 / square_size as i32);
+    let x_lower_bound: u8 = (translation.0 / square_size) as u8;
+    let x_upper_bound: u8 = (x_lower_bound as u32 + 2u32 + (window_size.0 / square_size as u32)).to_u8().unwrap_or(u8::MAX);
+    let y_lower_bound: u8 = (translation.1 / square_size) as u8;
+    let y_upper_bound: u8 = (y_lower_bound as u32 + 2u32 + (window_size.1 / square_size as u32)).to_u8().unwrap_or(u8::MAX);
 
-    for i in y_lower_bound..y_upper_bound + 2 {
-        let opt_x_achsen_map = nuklids.get(&(*&i as u8));
-        if opt_x_achsen_map.is_some() {
-            //Mit X Verschiebung/Constrains
-            for j in x_lower_bound..x_upper_bound + 2 {
-                let opt_nuklid = opt_x_achsen_map.unwrap().get(&(*&j as u8));
-                if opt_nuklid.is_some() {
-                    let nuklid = opt_nuklid.unwrap();
-                    draw_nuklid(draw,
-                                nuklid,
-                                j as f32 * square_size + (square_size * 0.5),
-                                i as f32 * square_size + (square_size * 0.5),
-                                &square_size,
-                    );
-                }
-            }
+    for i in y_lower_bound..y_upper_bound {
+        // println!("{}", i);
+        let x_achsen_map = match nuklids.get(&(*&i)) {
+            None => continue,
+            Some(x) => x
+        };
+        //Mit X Verschiebung/Constrains
+        for j in x_lower_bound..x_upper_bound {
+            let nuklid = match x_achsen_map.get(&j) {
+                None => continue,
+                Some(x) => x
+            };
+            draw_nuklid(draw,
+                        nuklid,
+                        j as f32 * square_size + (square_size * 0.5),
+                        i as f32 * square_size + (square_size * 0.5),
+                        &square_size,
+            );
         }
     }
 }

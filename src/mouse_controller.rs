@@ -58,6 +58,19 @@ pub fn drag_viewport(app: &App, model: &mut Model) {
         let delta_y: f32 = model.old_mouse_pos.1 - app.mouse.y;
         model.translate.0 += delta_x;
         model.translate.1 += delta_y;
+
+        //Limit translation
+        if model.translate.0 > model.square_size * 180. {
+            model.translate.0 = model.square_size * 180.;
+        } else if model.translate.0 < -100. {
+            model.translate.0 = -100.;
+        }
+
+        if model.translate.1 > model.square_size * 120. {
+            model.translate.1 = model.square_size * 120.;
+        } else if model.translate.1 < -100. {
+            model.translate.1 = -100.;
+        }
     }
     model.old_mouse_pos.0 = app.mouse.x;
     model.old_mouse_pos.1 = app.mouse.y;
@@ -68,7 +81,7 @@ pub fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseSc
     if let LineDelta(_, y) = scroll_delta {
         //Compute new Square size
         let new_size = model.square_size + (y * 2.);
-        if new_size <= 0. { return; }
+        if new_size <= 4. { return; }
         let old_square_size = model.square_size;
         model.square_size = new_size;
 
@@ -93,5 +106,18 @@ pub fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseSc
         //Adjusted Translation
         let new_translate = (model.translate.0 + needed_px_change.0, model.translate.1 + needed_px_change.1);
         model.translate = new_translate;
+
+        //Limit translation
+        if model.translate.0 > model.square_size * 200. {
+            model.translate.0 = model.square_size * 200.;
+        } else if model.translate.0 < -100. {
+            model.translate.0 = -100.;
+        }
+
+        if model.translate.1 > model.square_size * 200. {
+            model.translate.1 = model.square_size * 200.;
+        } else if model.translate.1 < -100. {
+            model.translate.1 = -100.;
+        }
     }
 }
