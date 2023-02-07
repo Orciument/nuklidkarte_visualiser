@@ -11,7 +11,7 @@ pub const BACKGROUND: Srgb<u8> = BLACK;
 pub const OUTER_SCALE: f32 = 0.95;
 pub const INNER_SCALE: f32 = 0.82;
 
-pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, square_size: f32, translation: (f32, f32), window_size: (u32, u32)) {
+pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, &square_size: &f32, translation: &(f32, f32), &window_size: &(u32, u32)) {
     //Zeichne nur alle Reihen die auch überhaupt auf dem Bildschirm angezeigt werden
     //Mit Y Verschiebung/Constrains
     let x_lower_bound: i32 = (translation.0 / square_size) as i32;
@@ -31,7 +31,7 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
                                 nuklid,
                                 j as f32 * square_size + (square_size * 0.5),
                                 i as f32 * square_size + (square_size * 0.5),
-                                square_size,
+                                &square_size,
                     );
                 }
             }
@@ -39,13 +39,13 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
     }
 }
 
-fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: f32) {
+fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: &f32) {
     let super_string = subsup::super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
     let name = super_string + &*nuklid.name;
     draw_card(draw, x, y, square_size, &name, nuklid.zerfalls_art.color())
 }
 
-pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: f32, text: &str, tile_color: Srgb<u8>) {
+pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: &f32, text: &str, tile_color: Srgb<u8>) {
     // draw.quad()
     //     .w_h(square_size, square_size)
     //     .x_y(x,y)
