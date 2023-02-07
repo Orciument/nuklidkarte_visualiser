@@ -7,6 +7,7 @@ mod nuklid_json_deserializer;
 mod subsup;
 mod datastring;
 mod print_reaction_equation;
+mod math_vec;
 
 use std::collections::HashMap;
 use nannou::prelude::*;
@@ -14,8 +15,12 @@ use crate::nuklid::{Nuklid};
 use crate::nuklid_json_deserializer::{deserialize_ad_to_map};
 use crate::print_reaction_equation::draw_reaction;
 
-//TODO Add Arrows to next Element
-//TODO Write Reaction Equation to Command Line
+//TODO Write Reaction Equation Elements to Command Line
+//TODO cap upper View limit to size of Nuklid Array
+//TODO Cap translation to window size
+//TODO Draw Achsen
+//TODO Draw Legend
+//TODO Find error (Maybe das start und endpunkt gleich sind?)
 
 fn main() {
     nannou::app(model)
@@ -63,9 +68,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     //Draw Nuklids
     nuklid_display_engine::draw_nuklid_map(&view, &model.nuklids, model.square_size, model.translate, app.main_window().inner_size_pixels());
     if model.selected_nuklid != (0,0) {
-        // draw.ellipse().x_y(500.,500.).w_h(50.,50.);
-        // draw.line().x_y(500.,500.).end(pt2(200., 200.)).weight(10.).color(WHITE);
-        let child = match (
+        let nuklid = match (
             match model.nuklids.get(&model.selected_nuklid.1) {
                 Some(x) => x,
                 None => { return; }
@@ -74,7 +77,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
             Some(x) => x,
             None => { return; }
         };
-        draw_reaction(&view, &model.square_size, child, &model.nuklids, 200);
+        draw_reaction(&view, &model.square_size, nuklid, &model.nuklids, 200);
     }
 
 

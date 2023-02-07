@@ -1,15 +1,13 @@
 use std::collections::HashMap;
 use nannou::{App, Draw};
-use nannou::color::{BLACK, DIMGRAY, RED, Srgb};
+use nannou::color::{BLACK};
 use nannou::geom::vec2;
-use nannou::image::Primitive;
-use nannou::prelude::{pt2, Vec2, WHITE};
+use nannou::prelude::{pt2, WHITE};
 use nannou::text::FontSize;
-use crate::{math_vec, Model};
+use crate::{Model};
 use crate::math_vec::scale_vec2;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
-use crate::nuklid_display_engine::BACKGROUND;
 use crate::subsup::super_ignore_unable;
 
 pub(crate) fn print_equation(app: &App, model: &Model, nuklid: &Nuklid, lifetime: u8) {
