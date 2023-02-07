@@ -156,13 +156,13 @@ fn overdraw_nuklid(draw: &Draw, square_size: &f32, nuklid: &Nuklid) {
     //Over Draw the Reacting Nuklids
     draw_t.z(25.).quad()
         .xy(p_nuklid)
-        .w_h(square_size.clone(), square_size.clone())
+        .w_h(*square_size, *square_size)
         .color(BLACK);
 
-    let inner_square_w_h = square_size.clone() * 0.9;
+    let inner_square_w_h = square_size * 0.9;
     draw_t.z(40.).ellipse()
         .xy(p_nuklid)
-        .w_h(square_size.clone(), square_size.clone())
+        .w_h(*square_size, *square_size)
         .color(nuklid.zerfalls_art.color());
 
     draw_t.z(40.).ellipse()
