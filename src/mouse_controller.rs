@@ -8,7 +8,7 @@ use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::window::MousePressedFn;
 use crate::{Model, print_reaction_equation};
 use crate::nuklid::{Nuklid};
-use crate::subsup::superscript_ignore_unable;
+use crate::subsup::super_ignore_unable;
 
 pub fn find_hovered_element(app: &App, model: &mut Model, button: MouseButton) {
     if !app.mouse.buttons.left().is_down() {

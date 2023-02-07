@@ -7,8 +7,8 @@ use nannou::text::FontSize;
 use crate::{Model, subsup, translate_origin, translate_to_view};
 use crate::nuklid::{Nuklid, ZerfallsArt};
 use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
-use crate::nuklid_display_engine::{BACKGROUND, INNER_SCALE};
-use crate::subsup::superscript_ignore_unable;
+use crate::nuklid_display_engine::BACKGROUND;
+use crate::subsup::super_ignore_unable;
 
 pub(crate) fn print_equation(app: &App, model: &Model, nuklid: &Nuklid, lifetime: u8) {
     if lifetime <= 0 { return; }
@@ -103,7 +103,7 @@ fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8
         .color(BACKGROUND);
 
 
-    let super_string = superscript_ignore_unable((nuklid.neutronen + nuklid.protonen).to_string());
+    let super_string = super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
     let name = super_string + &*nuklid.name;
 
     draw.x_y(square_size*0.5, square_size*0.5)
@@ -111,7 +111,5 @@ fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8
         .x_y(nuklid.neutronen as f32 * square_size, nuklid.protonen as f32 * square_size)
         .center_justify()
         .font_size((square_size / 3.) as FontSize)
-        .z(40.)
         .color(WHITE);
-
 }

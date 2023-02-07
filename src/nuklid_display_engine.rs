@@ -40,7 +40,7 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
 }
 
 fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: f32) {
-    let super_string = subsup::superscript_ignore_unable((nuklid.neutronen + nuklid.protonen).to_string());
+    let super_string = subsup::super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
     let name = super_string + &*nuklid.name;
     draw_card(draw, x, y, square_size, &name, nuklid.zerfalls_art.color())
 }

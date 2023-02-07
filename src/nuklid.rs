@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use nannou::prelude::{Srgb};
 use nannou::color::{DIMGRAY, WHITE};
 use crate::nuklid::ZerfallsArt::*;
-use crate::subsup::superscript_ignore_unable;
+use crate::subsup::super_ignore_unable;
 
 #[derive(Debug)]
 pub struct Nuklid {
@@ -18,7 +18,7 @@ pub struct Nuklid {
 impl Display for Nuklid {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let number = self.neutronen as u16 + self.protonen as u16;
-        write!(f, "{}", superscript_ignore_unable(number.to_string()) + &self.name)
+        write!(f, "{}", super_ignore_unable(number.to_string()) + &self.name)
     }
 }
 
