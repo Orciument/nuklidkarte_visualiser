@@ -13,7 +13,25 @@ use crate::nuklid::Nuklid;
 
 pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
     find_hovered_element(app, model);
-    clicked_on_sources(app, model)
+    clicked_on_sources(app, model);
+    pressed_middle(model, mouse_button);
+}
+
+fn pressed_middle(model: &mut Model, mouse_button: MouseButton) {
+    if mouse_button != MouseButton::Middle { return; }
+
+    let x_achse_map = match model.nuklids.get(&model.selected_nuklid.1) {
+        Some(x) => x,
+        None => { return; }
+    };
+
+    let nuklid = match x_achse_map.get(&model.selected_nuklid.0) {
+        Some(x) => x,
+        None => { return; }
+    };
+
+    println!();
+    print_reaction_equation::print_equation(model, &nuklid, 200);
 }
 
 pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
@@ -62,9 +80,6 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     };
 
     model.selected_nuklid = (x_index, y_index);
-
-    println!();
-    print_reaction_equation::print_equation(app, model, &nuklid, 200);
 }
 
 fn drag_viewport(app: &App, model: &mut Model) {
