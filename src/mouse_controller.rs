@@ -8,10 +8,12 @@ use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::geom::Point2;
 
 use crate::{Model, print_reaction_equation};
+use crate::draw_legend::clicked_on_sources;
 use crate::nuklid::Nuklid;
 
 pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
     find_hovered_element(app, model);
+    clicked_on_sources(app, model)
 }
 
 pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {

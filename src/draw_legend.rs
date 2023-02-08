@@ -1,8 +1,14 @@
 #![deny(unsafe_code)]
 
-use nannou::color::BLACK;
+use nannou::color::{Alpha, BLACK};
 use nannou::Draw;
 use nannou::prelude::{pt2, WHITE};
+use nannou::text::{Font, FontSize};
+
+use crate::*;
+use crate::nuklid::{Nuklid, ZerfallsArt};
+use crate::nuklid::ZerfallsArt::Stable;
+use crate::nuklid_display_engine::draw_nuklid;
 
 pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &window_size: &(u32, u32)) {
     let x_rand = window_size.0 as f32 + translation.0;
@@ -173,4 +179,39 @@ pub fn draw_legend(draw: &Draw, square_size: &f32) {
     draw.text("<- N (Neutron)").x_y(x_s + square_size * 5.2, y_s - 2. * square_size).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
     draw_card(draw, 15.0 * square_size, y_s * 2.0, &(square_size * 2.0), "Sources\n[Link]", Stable.color(), &0.2)
+}
+
+pub fn clicked_on_sources(app: &App, model: &mut Model) {
+    if !app.mouse.buttons.left().is_down() {
+        return;
+    }
+
+    let window_size = app.main_window().inner_size_points();
+    // - Translated Origin * Flipped Origin + Translated Display (where the mouse is, while
+    // rendering only what is visible is displayed and is shown in the bottom left corner as always
+    // so we need to translate
+    let corrected_x: f32 = (app.mouse.x - window_size.0 * -0.5) + model.translate.0;
+    let corrected_y: f32 = (app.mouse.y - window_size.1 * -0.5) + model.translate.1;
+
+    let sqs = model.square_size;
+    //Middle x and y
+    let m_y = (-sqs * 0.5 - 30.) * 2.;
+    let m_x = 15.0 * sqs;
+    //Bounds
+    let lower_x = m_x - sqs;
+    let upper_x = m_x + sqs;
+    let lower_y = m_y - sqs;
+    let upper_y = m_y + sqs;
+
+    //Test if in bounds
+    if corrected_x > upper_x || corrected_x < lower_x { return; }
+    if corrected_y > upper_y || corrected_y < lower_y { return; }
+
+    println!("Check the sources in your browser!");
+    match open::that("https://localhost") {
+        Ok(_) => {
+            // eprintln!("success")
+        }
+        Err(x) => { eprintln!("Error: {}", x) }
+    };
 }
