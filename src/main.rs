@@ -1,5 +1,17 @@
 #![deny(unsafe_code)]
 
+use std::collections::HashMap;
+
+use nannou::prelude::*;
+
+use crate::draw_legend::draw_axes;
+use crate::mouse_controller::*;
+use crate::nuklid::Nuklid;
+use crate::nuklid::ZerfallsArt::BetaPlus;
+use crate::nuklid_display_engine::draw_card;
+use crate::nuklid_json_deserializer::deserialize_ad_to_map;
+use crate::print_reaction_equation::draw_reaction;
+
 mod nuklid;
 mod nuklid_display_engine;
 mod mouse_controller;
@@ -9,16 +21,6 @@ mod datastring;
 mod print_reaction_equation;
 mod math_vec;
 mod draw_legend;
-
-use std::collections::HashMap;
-use nannou::prelude::*;
-use crate::draw_legend::draw_axes;
-use crate::mouse_controller::*;
-use crate::nuklid::{Nuklid};
-use crate::nuklid::ZerfallsArt::BetaPlus;
-use crate::nuklid_display_engine::draw_card;
-use crate::nuklid_json_deserializer::{deserialize_ad_to_map};
-use crate::print_reaction_equation::draw_reaction;
 
 fn main() {
     nannou::app(model)
@@ -59,7 +61,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     //Draw Nuklids
     nuklid_display_engine::draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
-    if model.selected_nuklid != (0,0) {
+    if model.selected_nuklid != (0, 0) {
         let nuklid = match (
             match model.nuklids.get(&model.selected_nuklid.1) {
                 Some(x) => x,

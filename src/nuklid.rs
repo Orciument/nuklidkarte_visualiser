@@ -1,8 +1,10 @@
 #![deny(unsafe_code)]
 
 use std::fmt::{Display, Formatter};
-use nannou::prelude::{Srgb};
+
 use nannou::color::{DIMGRAY, WHITE};
+use nannou::prelude::Srgb;
+
 use crate::nuklid::ZerfallsArt::*;
 use crate::subsup::super_ignore_unable;
 

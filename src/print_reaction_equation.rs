@@ -1,11 +1,13 @@
 use std::collections::HashMap;
+
 use nannou::{App, Draw};
-use nannou::color::{BLACK};
+use nannou::color::BLACK;
 use nannou::geom::vec2;
 use nannou::prelude::{pt2, WHITE};
 use nannou::text::FontSize;
-use crate::{Model};
+
 use crate::math_vec::scale_vec2;
+use crate::Model;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
 use crate::subsup::super_ignore_unable;
@@ -95,7 +97,7 @@ fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8
             //New target length of the vector between the points
             let l_new_vec = l_delta_vec - 2. * radius;
             //location vector to new start point
-            let new_start =  scale_vec2(&n_delta_vec, &radius) + p_start;
+            let new_start = scale_vec2(&n_delta_vec, &radius) + p_start;
             //location vector to the new end point
             let new_end = scale_vec2(&n_delta_vec, &l_new_vec) + new_start;
 

@@ -1,9 +1,11 @@
 #![deny(unsafe_code)]
 
 use std::collections::HashMap;
+
 use nannou::Draw;
-use nannou::prelude::{BLACK, WHITE, Srgb, ToPrimitive};
+use nannou::prelude::{BLACK, Srgb, ToPrimitive, WHITE};
 use nannou::text::FontSize;
+
 use crate::nuklid::Nuklid;
 use crate::subsup;
 
