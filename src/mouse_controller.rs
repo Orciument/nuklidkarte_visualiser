@@ -1,5 +1,4 @@
 #![deny(unsafe_code)]
-#![allow(unused)]
 
 use std::collections::HashMap;
 use nannou::App;
@@ -10,7 +9,7 @@ use crate::{Model, print_reaction_equation};
 use crate::nuklid::{Nuklid};
 use crate::subsup::super_ignore_unable;
 
-pub fn find_hovered_element(app: &App, model: &mut Model, button: MouseButton) {
+pub fn find_hovered_element(app: &App, model: &mut Model, _: MouseButton) {
     if !app.mouse.buttons.left().is_down() {
         return;
     }
@@ -76,7 +75,7 @@ pub fn drag_viewport(app: &App, model: &mut Model) {
     model.old_mouse_pos.1 = app.mouse.y;
 }
 
-pub fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, touch: TouchPhase) {
+pub fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, _: TouchPhase) {
     //Change the size of the Nuklid rectangle
     if let LineDelta(_, y) = scroll_delta {
         //Compute new Square size
