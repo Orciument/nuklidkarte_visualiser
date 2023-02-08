@@ -40,9 +40,9 @@ pub struct Model {
 fn model(app: &App) -> Model {
     let window = app.new_window()
         .view(view)
-        .mouse_wheel(scroll_scale_viewport)
-        .mouse_pressed(find_hovered_element)
-        .mouse_moved(drag_viewport)
+        .mouse_wheel(mouse_scroll)
+        .mouse_pressed(mouse_clicked)
+        .mouse_moved(mouse_moved)
         .build().unwrap();
     Model {
         window,
