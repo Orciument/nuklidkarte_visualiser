@@ -47,7 +47,7 @@ pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &win
     }
 
     //Y Axes
-    for i in 0..((y_rand / square_size) - 1. ) as i32 {
+    for i in 0..((y_rand / square_size) - 1.) as i32 {
         //Only show every second number if they would be to overlapping
         if square_size < &20.0 && i % 2 != 0 {
             continue;

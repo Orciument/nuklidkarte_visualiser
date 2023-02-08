@@ -2,8 +2,10 @@
 
 use std::collections::HashMap;
 use std::ops::Index;
+
 use json::JsonValue;
-use crate::{datastring};
+
+use crate::datastring;
 use crate::nuklid::{Nuklid, ZerfallsArt};
 
 //Advanced Nuklid Struct
@@ -33,7 +35,7 @@ pub fn deserialize_ad_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
         x_achse_map.insert(nuklid_struct.neutronen, nuklid_struct);
     }
     y_achse_map
-    }
+}
 
 fn translate_to_ad_struct(element: &JsonValue) -> Nuklid {
     let mut vec: Vec<(&str, &JsonValue)> = vec![];
