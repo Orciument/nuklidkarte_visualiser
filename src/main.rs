@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use nannou::prelude::*;
 
-use crate::draw_legend::draw_axes;
+use crate::draw_legend::{draw_axes, draw_legend};
 use crate::mouse_controller::*;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::BetaPlus;
@@ -21,6 +21,16 @@ mod datastring;
 mod print_reaction_equation;
 mod math_vec;
 mod draw_legend;
+
+#[macro_export]
+macro_rules! unwrap_or_return {
+    ($opt:expr) => {
+        match $opt {
+        Ok(x) => x,
+        Err(_) => { return; }
+    };
+    };
+}
 
 fn main() {
     nannou::app(model)
@@ -75,9 +85,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
     }
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
+    draw_legend(&view, &model.square_size);
 
     //Draw color Test
-    draw_card(&view, -100., -100., &model.square_size, "Tast", BetaPlus.color());
+    draw_card(&view, -100., -100., &model.square_size, "Tast", BetaPlus.color(), &0.3);
     // draw_card(&draw, 200., 200., &model.square_size, "Test", N.color());
     //End draw color test
 

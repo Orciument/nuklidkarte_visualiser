@@ -75,14 +75,14 @@ fn drag_viewport(app: &App, model: &mut Model) {
         //Limit translation
         if model.translate.0 > model.square_size * 180. {
             model.translate.0 = model.square_size * 180.;
-        } else if model.translate.0 < -100. {
-            model.translate.0 = -100.;
+        } else if model.translate.0 < -200. {
+            model.translate.0 = -200.;
         }
 
         if model.translate.1 > model.square_size * 120. {
             model.translate.1 = model.square_size * 120.;
-        } else if model.translate.1 < -100. {
-            model.translate.1 = -100.;
+        } else if model.translate.1 < -200. {
+            model.translate.1 = -200.;
         }
     }
     model.old_mouse_pos.0 = app.mouse.x;

@@ -43,13 +43,13 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
     }
 }
 
-fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: &f32) {
+pub fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: &f32) {
     let super_string = subsup::super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
     let name = super_string + &*nuklid.name;
-    draw_card(draw, x, y, square_size, &name, nuklid.zerfalls_art.color())
+    draw_card(draw, x, y, square_size, &name, nuklid.zerfalls_art.color(), &0.3)
 }
 
-pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: &f32, text: &str, tile_color: Srgb<u8>) {
+pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: &f32, text: &str, tile_color: Srgb<u8>, font_size_fac: &f32) {
     // draw.quad()
     //     .w_h(square_size, square_size)
     //     .x_y(x,y)
@@ -72,7 +72,7 @@ pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: &f32, text: &str, til
     draw.text(text)
         .x_y(x, y)
         .center_justify()
-        .font_size((square_size / 3.) as FontSize)
+        .font_size((square_size * font_size_fac) as FontSize)
         .z(20.)
         .color(WHITE);
 }
