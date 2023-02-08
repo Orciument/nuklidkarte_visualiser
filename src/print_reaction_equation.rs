@@ -12,7 +12,7 @@ use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
 use crate::subsup::super_ignore_unable;
 
-pub(crate) fn print_equation(app: &App, model: &Model, nuklid: &Nuklid, lifetime: u8) {
+pub(crate) fn print_equation(model: &Model, nuklid: &Nuklid, lifetime: u8) {
     if lifetime <= 0 { return; }
 
     //Return if Element is Stable of has no Path
@@ -38,7 +38,7 @@ pub(crate) fn print_equation(app: &App, model: &Model, nuklid: &Nuklid, lifetime
     println!("{} -> {}", nuklid, child);
 
     //Recursion!
-    print_equation(app, model, child, lifetime - 1);
+    print_equation(model, child, lifetime - 1);
 }
 
 pub fn draw_reaction(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, lifetime: u8) {
