@@ -11,8 +11,8 @@ use crate::subsup::super_ignore_unable;
 #[derive(Debug)]
 pub struct Nuklid {
     pub zerfalls_art: ZerfallsArt,
-    pub name: Box<str>,
-    pub life: Box<str>,
+    pub name: String,
+    pub life: String,
     pub neutronen: u8,
     pub protonen: u8,
 }
