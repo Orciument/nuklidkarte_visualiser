@@ -35,14 +35,13 @@ pub(crate) fn print_equation(app: &App, model: &Model, nuklid: &Nuklid, lifetime
     //println!("Z: {}", nuklid.zerfalls_art);
     println!("{} -> {}", nuklid, child);
 
-    //TODO Recursion!
+    //Recursion!
     print_equation(app, model, child, lifetime - 1);
-    // draw_arrows(app, model, &nuklid, &child_p_n.0, &child_p_n.1);
 }
 
 pub fn draw_reaction(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, lifetime: u8) {
     if lifetime <= 0 { return; }
-    //TODO Find Child Koords
+    //Find Child Koords
     let child_p_n = ((nuklid.protonen as i16 + nuklid.zerfalls_art.delta_prot() as i16) as u8, (nuklid.neutronen as i16 + nuklid.zerfalls_art.delta_neut() as i16) as u8);
 
     //Find Child
@@ -84,21 +83,20 @@ fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8
                 .weight(square_size * 0.3)
             ;
 
-            //TODO push arrow
-            //TODO |DeltaVec|
-            //TODO DeltaVec Normalisieren
-            //TODO target Kreisradius berechnen
-            //TODO 2Kreisradius abziehen
-            //TODO neuen ||DeltaVec|| mit 1Kreisradius skalieren = new_start
-            //TODO new_start + skaliert DeltaVec
-
+            //Vector between mid points of parent and child nuclide
             let delta_vec = vec2(p_end.x - p_start.x, p_end.y - p_start.y);
+            //length of Vector delta_vec
             let l_delta_vec = f32::sqrt((delta_vec.x * delta_vec.x) + (delta_vec.y * delta_vec.y));
+            //normalise Vector
             let n_delta_vec = delta_vec.normalize();
+            //distance from the mid of the square to the target radius
             let radius = square_size * 0.25;
 
+            //New target length of the vector between the points
             let l_new_vec = l_delta_vec - 2. * radius;
+            //location vector to new start point
             let new_start =  scale_vec2(&n_delta_vec, &radius) + p_start;
+            //location vector to the new end point
             let new_end = scale_vec2(&n_delta_vec, &l_new_vec) + new_start;
 
             //TODO draw unter diesem Pfeil einen anderen Schwarzen, der die Line ersetzt
@@ -168,20 +166,7 @@ fn overdraw_nuklid(draw: &Draw, square_size: &f32, nuklid: &Nuklid) {
     draw_t.z(40.).ellipse()
         .xy(p_nuklid)
         .w_h(inner_square_w_h, inner_square_w_h)
-        .color(BLACK
-               // Srgb::<u8> {
-               // red: 44,
-               // green: 44,
-               // blue: 59,
-               // standard: Default::default(),
-               // }
-               // Srgb::<u8> {
-               //     red: 164,
-               //     green: 161,
-               //     blue: 179,
-               //     standard: Default::default(),
-               // }
-        );
+        .color(BLACK);
 
 
     let super_string = super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
