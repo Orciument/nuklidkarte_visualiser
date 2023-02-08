@@ -6,6 +6,7 @@ I was inspired to do this project while working with nuclide tables in physics c
 ### Primary source
 - https://www-nds.iaea.org/relnsd/vcharthtml/VChartHTML.html
 - https://www-nds.iaea.org/relnsd/vcharthtml/api_v0_guide.html (API)
+- https://www-nds.iaea.org/relnsd/vcharthtml/guide.html#gs_de
 ## Secondary sources
 I used some different sources to plug some gaps
 - https://www-nds.iaea.org/relnsd/vcharthtml/decay_libs.html (This is the same site, but this one has a different dataset)
