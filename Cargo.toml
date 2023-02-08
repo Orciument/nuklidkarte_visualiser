@@ -10,3 +10,5 @@ nannou = "0.18.1"
 json = "0.12.4"
 regex = "1.7.1"
 open = "3.2.0"
+# use nix 0.26 to overwrite unsafe older version used by nannou?
+nix = "0.26.2"
