@@ -208,7 +208,7 @@ pub fn clicked_on_sources(app: &App, model: &mut Model) {
     if corrected_y > upper_y || corrected_y < lower_y { return; }
 
     println!("Check the sources in your browser!");
-    match open::that("https://localhost") {
+    match open::that("https://github.com/Orciument/nuklidkarte_visualiser#sources") {
         Ok(_) => {
             // eprintln!("success")
         }
