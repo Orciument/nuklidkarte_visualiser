@@ -19,11 +19,6 @@ use crate::nuklid_display_engine::draw_card;
 use crate::nuklid_json_deserializer::{deserialize_ad_to_map};
 use crate::print_reaction_equation::draw_reaction;
 
-//TODO Write Reaction Equation Elements to Command Line
-//TODO cap upper View limit to size of Nuklid Array
-//TODO Draw Legend
-//TODO Find error (Maybe das start und endpunkt gleich sind?)
-
 fn main() {
     nannou::app(model)
         .update(update)
