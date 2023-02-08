@@ -8,7 +8,7 @@ use nannou::prelude::Srgb;
 use crate::nuklid::ZerfallsArt::*;
 use crate::subsup::super_ignore_unable;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Nuklid {
     pub zerfalls_art: ZerfallsArt,
     pub name: String,

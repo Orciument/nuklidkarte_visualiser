@@ -44,7 +44,7 @@ pub struct Model {
     old_mouse_pos: (f32, f32),
     translate: (f32, f32),
     square_size: f32,
-    selected_nuklid: (u8, u8),
+    selected_nuklid: Option<Nuklid>,
 }
 
 fn model(app: &App) -> Model {
@@ -60,7 +60,7 @@ fn model(app: &App) -> Model {
         old_mouse_pos: (app.mouse.x, app.mouse.y),
         translate: (0., 0.),
         square_size: 50.,
-        selected_nuklid: (0, 0),
+        selected_nuklid: None,
     }
 }
 
@@ -71,17 +71,8 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     //Draw Nuklids
     nuklid_display_engine::draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
-    if model.selected_nuklid != (0, 0) {
-        let nuklid = match (
-            match model.nuklids.get(&model.selected_nuklid.1) {
-                Some(x) => x,
-                None => { return; }
-            }
-        ).get(&model.selected_nuklid.0) {
-            Some(x) => x,
-            None => { return; }
-        };
-        draw_reaction(&view, &model.square_size, nuklid, &model.nuklids, 200);
+     if let Some(sel) = &model.selected_nuklid {
+        draw_reaction(&view, &model.square_size, sel, &model.nuklids, 200);
     }
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());

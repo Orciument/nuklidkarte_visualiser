@@ -20,18 +20,12 @@ pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
 fn pressed_middle(model: &mut Model, mouse_button: MouseButton) {
     if mouse_button != MouseButton::Middle { return; }
 
-    let x_achse_map = match model.nuklids.get(&model.selected_nuklid.1) {
-        Some(x) => x,
-        None => { return; }
+    let nuklid = match &model.selected_nuklid {
+        None => return,
+        Some(x) => x
     };
-
-    let nuklid = match x_achse_map.get(&model.selected_nuklid.0) {
-        Some(x) => x,
-        None => { return; }
-    };
-
     println!();
-    print_reaction_equation::print_equation(model, &nuklid, 200);
+    print_reaction_equation::print_equation(model, nuklid, 200);
 }
 
 pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
@@ -59,14 +53,15 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     let x_index: u8 = (corrected_x / model.square_size - 0.5).round() as u8;
     let y_index: u8 = (corrected_y / model.square_size - 0.5).round() as u8;
 
-    if model.selected_nuklid == (x_index, y_index) {
-        // eprintln!("deselected");
-        model.selected_nuklid = (0, 0);
-        return;
+    if let Some(sel) = &model.selected_nuklid {
+        if sel.protonen == y_index && sel.neutronen == x_index {
+            model.selected_nuklid = None;
+            return;
+        }
     }
 
     //If the Currently Clicked on Nuklide is the same as the already selected we deselect it
-    model.selected_nuklid = (0, 0);
+    model.selected_nuklid = None;
 
     //Check if Nuklid exists, and get if it exists
     let x_achse_map = match nuklids.get(&y_index) {
@@ -79,7 +74,7 @@ fn find_hovered_element(app: &App, model: &mut Model) {
         None => { return; }
     };
 
-    model.selected_nuklid = (x_index, y_index);
+    model.selected_nuklid = Some(nuklid.clone());
 }
 
 fn drag_viewport(app: &App, model: &mut Model) {
