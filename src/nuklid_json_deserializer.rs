@@ -45,10 +45,10 @@ fn translate_to_ad_struct(element: &JsonValue) -> Nuklid {
 
     //TODO Bunch of unsafe unwraps
     Nuklid {
-        name: Box::from(vec[2].1.to_string()),
+        name: vec[2].1.to_string(),
         neutronen: vec[1].1.as_u8().unwrap(), //n
         protonen: vec[0].1.as_u8().unwrap(), //z
-        life: Box::from(vec[3].1.to_string()),
+        life: vec[3].1.to_string(),
         zerfalls_art: ZerfallsArt::parse_from_string(vec[4].1.as_str().unwrap()),
     }
 }

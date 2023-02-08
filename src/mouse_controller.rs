@@ -8,9 +8,24 @@ use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::geom::Point2;
 
 use crate::{Model, print_reaction_equation};
+use crate::draw_legend::clicked_on_sources;
 use crate::nuklid::Nuklid;
 
-pub fn find_hovered_element(app: &App, model: &mut Model, _: MouseButton) {
+pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
+    find_hovered_element(app, model);
+    clicked_on_sources(app, model)
+}
+
+pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
+    drag_viewport(app, model);
+}
+
+pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, touch_phase: TouchPhase) {
+    scroll_scale_viewport(app, model, scroll_delta);
+}
+
+
+fn find_hovered_element(app: &App, model: &mut Model) {
     if !app.mouse.buttons.left().is_down() {
         return;
     }
@@ -52,7 +67,7 @@ pub fn find_hovered_element(app: &App, model: &mut Model, _: MouseButton) {
     print_reaction_equation::print_equation(app, model, &nuklid, 200);
 }
 
-pub fn drag_viewport(app: &App, model: &mut Model, _: Point2) {
+fn drag_viewport(app: &App, model: &mut Model) {
     if app.mouse.buttons.right().is_down() {
         let delta_x: f32 = model.old_mouse_pos.0 - app.mouse.x;
         let delta_y: f32 = model.old_mouse_pos.1 - app.mouse.y;
@@ -62,21 +77,21 @@ pub fn drag_viewport(app: &App, model: &mut Model, _: Point2) {
         //Limit translation
         if model.translate.0 > model.square_size * 180. {
             model.translate.0 = model.square_size * 180.;
-        } else if model.translate.0 < -100. {
-            model.translate.0 = -100.;
+        } else if model.translate.0 < -200. {
+            model.translate.0 = -200.;
         }
 
         if model.translate.1 > model.square_size * 120. {
             model.translate.1 = model.square_size * 120.;
-        } else if model.translate.1 < -100. {
-            model.translate.1 = -100.;
+        } else if model.translate.1 < -200. {
+            model.translate.1 = -200.;
         }
     }
     model.old_mouse_pos.0 = app.mouse.x;
     model.old_mouse_pos.1 = app.mouse.y;
 }
 
-pub fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, _: TouchPhase) {
+fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta) {
     //Change the size of the Nuklid rectangle
     if let LineDelta(_, y) = scroll_delta {
         //Compute new Square size
