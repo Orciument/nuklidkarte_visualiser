@@ -13,6 +13,7 @@ mod draw_legend;
 use std::collections::HashMap;
 use nannou::prelude::*;
 use crate::draw_legend::draw_axes;
+use crate::mouse_controller::*;
 use crate::nuklid::{Nuklid};
 use crate::nuklid::ZerfallsArt::BetaPlus;
 use crate::nuklid_display_engine::draw_card;
@@ -21,7 +22,6 @@ use crate::print_reaction_equation::draw_reaction;
 
 fn main() {
     nannou::app(model)
-        .update(update)
         .run();
 }
 
@@ -38,8 +38,9 @@ pub struct Model {
 fn model(app: &App) -> Model {
     let window = app.new_window()
         .view(view)
-        .mouse_wheel(mouse_controller::scroll_scale_viewport)
-        .mouse_pressed(mouse_controller::find_hovered_element)
+        .mouse_wheel(scroll_scale_viewport)
+        .mouse_pressed(find_hovered_element)
+        .mouse_moved(drag_viewport)
         .build().unwrap();
     Model {
         window,
@@ -49,12 +50,6 @@ fn model(app: &App) -> Model {
         square_size: 50.,
         selected_nuklid: (0, 0),
     }
-}
-
-fn update(_app: &App, _model: &mut Model, _update: Update) {
-    //TODO Eliminate Update and change these functions to be base on Events
-    // mouse_controller::find_hovered_element(&_app, _model);
-    mouse_controller::drag_viewport(&_app, _model);
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {

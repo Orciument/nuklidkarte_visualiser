@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use nannou::App;
 use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::event::MouseScrollDelta::LineDelta;
+use nannou::geom::Point2;
 use nannou::window::MousePressedFn;
 use crate::{Model, print_reaction_equation};
 use crate::nuklid::{Nuklid};
@@ -51,7 +52,7 @@ pub fn find_hovered_element(app: &App, model: &mut Model, _: MouseButton) {
     print_reaction_equation::print_equation(app, model, &nuklid, 200);
 }
 
-pub fn drag_viewport(app: &App, model: &mut Model) {
+pub fn drag_viewport(app: &App, model: &mut Model, _:Point2) {
     if app.mouse.buttons.right().is_down() {
         let delta_x: f32 = model.old_mouse_pos.0 - app.mouse.x;
         let delta_y: f32 = model.old_mouse_pos.1 - app.mouse.y;
