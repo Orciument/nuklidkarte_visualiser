@@ -77,8 +77,6 @@ fn find_hovered_element(app: &App, model: &mut Model) {
 
     model.selected_nuklid = Some(nuklid.clone());
     model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
-    eprintln!("{:?}", model.reaction_chain);
-    //TODO hier die Chain finden!
 }
 
 fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {

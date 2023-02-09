@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use nannou::{App, Draw};
+use nannou::Draw;
 use nannou::color::BLACK;
 use nannou::geom::vec2;
 use nannou::prelude::{pt2, WHITE};
@@ -41,31 +39,14 @@ pub(crate) fn print_equation(model: &Model, nuklid: &Nuklid, lifetime: u8) {
     print_equation(model, child, lifetime - 1);
 }
 
-pub fn draw_reaction(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, lifetime: u8) {
-    if lifetime <= 0 { return; }
-    //Find Child Koords
-    let child_p_n = ((nuklid.protonen as i16 + nuklid.zerfalls_art.delta_prot() as i16) as u8, (nuklid.neutronen as i16 + nuklid.zerfalls_art.delta_neut() as i16) as u8);
-
-    //Find Child
-    let child = match (
-        match nuklids.get(&child_p_n.0) {
-            Some(x) => x,
-            None => { return; }
-        }
-    ).get(&child_p_n.1) {
-        Some(x) => x,
-        None => { return; }
-    };
-
-    overdraw_nuklid(&draw, square_size, nuklid);
-    match nuklid.zerfalls_art {
-        Stable | Unknown | SF => {}
-        _ => {
-            draw_arrows(&draw, square_size, nuklid, &child.neutronen, &child.protonen);
-        }
+pub fn draw_reaction(draw: &Draw, square_size: &f32, chain: &Vec<Nuklid>) {
+    for i in 0..chain.len() {
+        overdraw_nuklid(draw, square_size, &chain[i]);
+        let child_p_n = ((chain[i].protonen as i16 + chain[i].zerfalls_art.delta_prot() as i16) as u8, (chain[i].neutronen as i16 + chain[i].zerfalls_art.delta_neut() as i16) as u8);
+        draw_arrows(draw, square_size, &chain[i], &child_p_n.1, &child_p_n.0)
     }
-    draw_reaction(draw, square_size, child, nuklids, lifetime - 1);
 }
+
 
 fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8) {
     //Translated Draw

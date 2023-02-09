@@ -1,13 +1,13 @@
 #![deny(unsafe_code)]
 
-use nannou::color::{Alpha, BLACK};
+use nannou::color::{BLACK};
 use nannou::Draw;
 use nannou::prelude::{pt2, WHITE};
-use nannou::text::{Font, FontSize};
+use nannou::text::{Font};
 
 use crate::*;
 use crate::nuklid::{Nuklid, ZerfallsArt};
-use crate::nuklid::ZerfallsArt::Stable;
+use crate::nuklid::ZerfallsArt::*;
 use crate::nuklid_display_engine::draw_nuklid;
 
 pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &window_size: &(u32, u32)) {
@@ -101,49 +101,49 @@ pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &win
 
 pub fn draw_legend(draw: &Draw, square_size: &f32) {
     let alpha: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::Alpha,
+        zerfalls_art: Alpha,
         name: "Be".to_string(),
         life: "-".to_string(),
         neutronen: 4,
         protonen: 4,
     };
     let beta_minus: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::BetaMinus,
+        zerfalls_art: BetaMinus,
         name: "Li".to_string(),
         life: "-".to_string(),
         neutronen: 3,
         protonen: 5,
     };
     let beta_plus: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::BetaPlus,
+        zerfalls_art: BetaPlus,
         name: "O".to_string(),
         life: "-".to_string(),
         neutronen: 8,
         protonen: 7,
     };
     let stable: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::Stable,
+        zerfalls_art: Stable,
         name: "He".to_string(),
         life: "-".to_string(),
         neutronen: 2,
         protonen: 2,
     };
     let p: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::P,
+        zerfalls_art: P,
         name: "Mg".to_string(),
         life: "-".to_string(),
         neutronen: 12,
         protonen: 7,
     };
     let n: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::N,
+        zerfalls_art: N,
         name: "H".to_string(),
         life: "-".to_string(),
         neutronen: 1,
         protonen: 3,
     };
     let sf: Nuklid = Nuklid {
-        zerfalls_art: ZerfallsArt::SF,
+        zerfalls_art: SF,
         name: "H".to_string(),
         life: "-".to_string(),
         neutronen: 138,
