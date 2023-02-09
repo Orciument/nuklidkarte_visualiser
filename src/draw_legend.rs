@@ -89,11 +89,11 @@ pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &win
         .color(BLACK)
     ;
     //draw character
-    draw.text("p").z(20.)
+    draw.text("n").z(20.)
         .x_y(x_rand - 20., -1. + 5.)
         .color(WHITE)
     ;
-    draw.text("n").z(20.)
+    draw.text("p").z(20.)
         .x_y(-1., y_rand - 20.)
         .color(WHITE)
     ;
