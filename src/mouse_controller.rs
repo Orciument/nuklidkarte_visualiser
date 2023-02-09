@@ -81,7 +81,7 @@ fn find_hovered_element(app: &App, model: &mut Model) {
 
 fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
     let parent = match vec.last() {
-        None => return vec![],
+        None => return vec,
         Some(x) => x
     };
 
@@ -94,11 +94,11 @@ fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nukli
     let child = match (
         match map.get(&child_p_n.0) {
             Some(x) => x,
-            None => return vec![],
+            None => return vec,
         }
     ).get(&child_p_n.1) {
         Some(x) => x,
-        None => return vec![],
+        None => return vec,
     };
     vec.push(child.clone());
 
