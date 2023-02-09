@@ -8,7 +8,6 @@ use crate::draw_legend::{draw_axes, draw_legend};
 use crate::mouse_controller::*;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::BetaPlus;
-use crate::nuklid_display_engine::draw_card;
 use crate::nuklid_json_deserializer::deserialize_ad_to_map;
 use crate::print_reaction_equation::{draw_reaction};
 
@@ -75,11 +74,6 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
     draw_legend(&view, &model.square_size);
-
-    //Draw color Test
-    draw_card(&view, -100., -100., &model.square_size, "Tast", BetaPlus.color(), &0.3);
-    // draw_card(&draw, 200., 200., &model.square_size, "Test", N.color());
-    //End draw color test
 
     //Debugging stuff
     view.ellipse().w_h(5.0, 5.0).color(HOTPINK).caps_round();

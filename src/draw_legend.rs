@@ -6,9 +6,9 @@ use nannou::prelude::{pt2, WHITE};
 use nannou::text::{Font};
 
 use crate::*;
-use crate::nuklid::{Nuklid, ZerfallsArt};
+use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::*;
-use crate::nuklid_display_engine::draw_nuklid;
+use crate::nuklid_display_engine::draw_card;
 
 pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &window_size: &(u32, u32)) {
     let x_rand = window_size.0 as f32 + translation.0;
@@ -159,23 +159,23 @@ pub fn draw_legend(draw: &Draw, square_size: &f32) {
 
     let x_s = square_size * 3.5;
     let y_s = -square_size * 0.5 - 30.;
-    draw_nuklid(draw, &alpha, x_s, y_s, square_size);
+    alpha.draw(draw, square_size, Some((x_s, y_s)));
     draw.text("<- Alpha").x_y(x_s + square_size * 1.5, y_s).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
-    draw_nuklid(draw, &beta_minus, x_s, y_s - square_size, square_size);
+    beta_minus.draw(draw, square_size, Some((x_s, y_s - square_size)));
     draw.text("<- Beta-").x_y(x_s + square_size * 1.5, y_s - square_size).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
-    draw_nuklid(draw, &beta_plus, x_s, y_s - 2. * square_size, square_size);
+    beta_plus.draw(draw, square_size, Some((x_s, y_s - 2. * square_size)));
     draw.text("<- Beta+").x_y(x_s + square_size * 1.5, y_s - 2. * square_size).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
 
-    draw_nuklid(draw, &stable, x_s + 3. * square_size, y_s, square_size);
+    stable.draw(draw, square_size, Some((x_s + 3. * square_size, y_s)));
     draw.text("<- Stable").x_y(x_s + square_size * 4.6, y_s).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
-    draw_nuklid(draw, &p, x_s + 3. * square_size, y_s - square_size, square_size);
+    p.draw(draw, square_size, Some((x_s + 3. * square_size, y_s - square_size)));
     draw.text("<- P (Proton)").x_y(x_s + square_size * 5., y_s - square_size).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
-    draw_nuklid(draw, &n, x_s + 3. * square_size, y_s - 2. * square_size, square_size);
+    n.draw(draw, square_size, Some((x_s + 3. * square_size, y_s - 2. * square_size)));
     draw.text("<- N (Neutron)").x_y(x_s + square_size * 5.2, y_s - 2. * square_size).center_justify().font(font.clone()).font_size((square_size * 0.4) as u32);
 
     draw_card(draw, 15.0 * square_size, y_s * 2.0, &(square_size * 2.0), "Sources\n[Link]", Stable.color(), &0.2)
