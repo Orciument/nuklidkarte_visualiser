@@ -34,7 +34,6 @@ pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta
     scroll_scale_viewport(app, model, scroll_delta);
 }
 
-
 fn find_hovered_element(app: &App, model: &mut Model) {
     let nuklids: &HashMap<u8, HashMap<u8, Nuklid>> = &model.nuklids;
 
@@ -47,28 +46,29 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     let x_index: u8 = (corrected_x / model.square_size - 0.5).round() as u8;
     let y_index: u8 = (corrected_y / model.square_size - 0.5).round() as u8;
 
-    if let Some(sel) = &model.selected_nuklid {
+    //Check if this Nuklide is already selected, if so, unselect it, return
+    if let Some(sel) = model.reaction_chain.first() {
         if sel.protonen == y_index && sel.neutronen == x_index {
-            model.selected_nuklid = None;
+            model.reaction_chain.clear();
             return;
         }
     }
 
-    //If the Currently Clicked on Nuklide is the same as the already selected we deselect it
-    model.selected_nuklid = None;
+    //Unselect Nuklid in case the selection of the new Nuklid fails, e.g. if the is none
+    model.reaction_chain.clear();
 
     //Check if Nuklid exists, and get if it exists
-    let x_achse_map = match nuklids.get(&y_index) {
+    let nuklid = match (
+        match nuklids.get(&y_index) {
+            Some(x) => x,
+            None => return,
+        }
+    ).get(&x_index) {
         Some(x) => x,
-        None => { return; }
+        None => return,
     };
 
-    let nuklid = match x_achse_map.get(&x_index) {
-        Some(x) => x,
-        None => { return; }
-    };
-
-    model.selected_nuklid = Some(nuklid.clone());
+    //Save the new selection (and chain)
     model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
 }
 

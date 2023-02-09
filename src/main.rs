@@ -44,7 +44,6 @@ pub struct Model {
     old_mouse_pos: (f32, f32),
     translate: (f32, f32),
     square_size: f32,
-    selected_nuklid: Option<Nuklid>,
     reaction_chain: Vec<Nuklid>,
 }
 
@@ -61,7 +60,6 @@ fn model(app: &App) -> Model {
         old_mouse_pos: (app.mouse.x, app.mouse.y),
         translate: (0., 0.),
         square_size: 50.,
-        selected_nuklid: None,
         reaction_chain: vec![],
     }
 }
