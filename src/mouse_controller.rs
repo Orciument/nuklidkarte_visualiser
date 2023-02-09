@@ -7,25 +7,23 @@ use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::geom::Point2;
 
-use crate::{Model, print_reaction_equation};
 use crate::draw_legend::clicked_on_sources;
+use crate::Model;
 use crate::nuklid::Nuklid;
+use crate::nuklid::ZerfallsArt::*;
+use crate::print_reaction_equation::print_equation;
 
 pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
-    find_hovered_element(app, model);
-    clicked_on_sources(app, model);
-    pressed_middle(model, mouse_button);
-}
-
-fn pressed_middle(model: &mut Model, mouse_button: MouseButton) {
-    if mouse_button != MouseButton::Middle { return; }
-
-    let nuklid = match &model.selected_nuklid {
-        None => return,
-        Some(x) => x
-    };
-    println!();
-    print_reaction_equation::print_equation(model, nuklid, 200);
+    match mouse_button {
+        MouseButton::Left => {
+            find_hovered_element(app, model);
+            clicked_on_sources(app, model);
+        }
+        MouseButton::Middle => {
+            print_equation(&model.reaction_chain);
+        }
+        _ => {}
+    }
 }
 
 pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
@@ -36,12 +34,7 @@ pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta
     scroll_scale_viewport(app, model, scroll_delta);
 }
 
-
 fn find_hovered_element(app: &App, model: &mut Model) {
-    if !app.mouse.buttons.left().is_down() {
-        return;
-    }
-
     let nuklids: &HashMap<u8, HashMap<u8, Nuklid>> = &model.nuklids;
 
     let window_size = app.main_window().inner_size_points();
@@ -53,28 +46,60 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     let x_index: u8 = (corrected_x / model.square_size - 0.5).round() as u8;
     let y_index: u8 = (corrected_y / model.square_size - 0.5).round() as u8;
 
-    if let Some(sel) = &model.selected_nuklid {
+    //Check if this Nuklide is already selected, if so, unselect it, return
+    if let Some(sel) = model.reaction_chain.first() {
         if sel.protonen == y_index && sel.neutronen == x_index {
-            model.selected_nuklid = None;
+            model.reaction_chain.clear();
             return;
         }
     }
 
-    //If the Currently Clicked on Nuklide is the same as the already selected we deselect it
-    model.selected_nuklid = None;
+    //Unselect Nuklid in case the selection of the new Nuklid fails, e.g. if the is none
+    model.reaction_chain.clear();
 
     //Check if Nuklid exists, and get if it exists
-    let x_achse_map = match nuklids.get(&y_index) {
+    let nuklid = match (
+        match nuklids.get(&y_index) {
+            Some(x) => x,
+            None => return,
+        }
+    ).get(&x_index) {
         Some(x) => x,
-        None => { return; }
+        None => return,
     };
 
-    let nuklid = match x_achse_map.get(&x_index) {
-        Some(x) => x,
-        None => { return; }
+    //Save the new selection (and chain)
+    model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
+}
+
+fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
+    let parent = match vec.last() {
+        None => return vec,
+        Some(x) => x
     };
 
-    model.selected_nuklid = Some(nuklid.clone());
+    //TODO should be able to make the addition in i8 instead
+    let child_p_n = (
+        (parent.protonen as i16 + parent.zerfalls_art.delta_prot() as i16) as u8,
+        (parent.neutronen as i16 + parent.zerfalls_art.delta_neut() as i16) as u8
+    );
+
+    let child = match (
+        match map.get(&child_p_n.0) {
+            Some(x) => x,
+            None => return vec,
+        }
+    ).get(&child_p_n.1) {
+        Some(x) => x,
+        None => return vec,
+    };
+    vec.push(child.clone());
+
+    //Return if Element is Stable of has no Path
+    match &child.zerfalls_art {
+        SF | Stable | Unknown => { return vec; }
+        _ => advance_decay_chain(vec, map)
+    }
 }
 
 fn drag_viewport(app: &App, model: &mut Model) {

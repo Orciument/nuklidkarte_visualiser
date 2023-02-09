@@ -1,71 +1,32 @@
-use std::collections::HashMap;
-
-use nannou::{App, Draw};
+use nannou::Draw;
 use nannou::color::BLACK;
 use nannou::geom::vec2;
 use nannou::prelude::{pt2, WHITE};
 use nannou::text::FontSize;
 
 use crate::math_vec::scale_vec2;
-use crate::Model;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
 use crate::subsup::super_ignore_unable;
 
-pub(crate) fn print_equation(model: &Model, nuklid: &Nuklid, lifetime: u8) {
-    if lifetime <= 0 { return; }
-
-    //Return if Element is Stable of has no Path
-    match nuklid.zerfalls_art {
-        SF | Stable | Unknown => { return; }
-        _ => {}
+pub fn print_equation(chain: &Vec<Nuklid>) {
+    println!();
+    for i in 0..chain.len()-1 {
+        let parent =  &chain[i];
+        let child =  &chain[i+1];
+        println!("{} -> {}", parent, child);
     }
-
-    let child_p_n = ((nuklid.protonen as i16 + nuklid.zerfalls_art.delta_prot() as i16) as u8, (nuklid.neutronen as i16 + nuklid.zerfalls_art.delta_neut() as i16) as u8);
-
-    let child = match (
-        match model.nuklids.get(&child_p_n.0) {
-            Some(x) => x,
-            None => { return; }
-        }
-    ).get(&child_p_n.1) {
-        Some(x) => x,
-        None => { return; }
-    };
-
-    //TODO Print Reaction
-    //println!("Z: {}", nuklid.zerfalls_art);
-    println!("{} -> {}", nuklid, child);
-
-    //Recursion!
-    print_equation(model, child, lifetime - 1);
 }
 
-pub fn draw_reaction(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, lifetime: u8) {
-    if lifetime <= 0 { return; }
-    //Find Child Koords
-    let child_p_n = ((nuklid.protonen as i16 + nuklid.zerfalls_art.delta_prot() as i16) as u8, (nuklid.neutronen as i16 + nuklid.zerfalls_art.delta_neut() as i16) as u8);
-
-    //Find Child
-    let child = match (
-        match nuklids.get(&child_p_n.0) {
-            Some(x) => x,
-            None => { return; }
-        }
-    ).get(&child_p_n.1) {
-        Some(x) => x,
-        None => { return; }
-    };
-
-    overdraw_nuklid(&draw, square_size, nuklid);
-    match nuklid.zerfalls_art {
-        Stable | Unknown | SF => {}
-        _ => {
-            draw_arrows(&draw, square_size, nuklid, &child.neutronen, &child.protonen);
+pub fn draw_reaction(draw: &Draw, square_size: &f32, chain: &Vec<Nuklid>) {
+    for i in 0..chain.len() {
+        overdraw_nuklid(draw, square_size, &chain[i]);
+        if let Some(child) = chain.get(i+1) {
+            draw_arrows(draw, square_size, &chain[i], &child.neutronen, &child.protonen);
         }
     }
-    draw_reaction(draw, square_size, child, nuklids, lifetime - 1);
 }
+
 
 fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8) {
     //Translated Draw

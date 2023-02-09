@@ -10,7 +10,7 @@ use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::BetaPlus;
 use crate::nuklid_display_engine::draw_card;
 use crate::nuklid_json_deserializer::deserialize_ad_to_map;
-use crate::print_reaction_equation::draw_reaction;
+use crate::print_reaction_equation::{draw_reaction};
 
 mod nuklid;
 mod nuklid_display_engine;
@@ -44,7 +44,7 @@ pub struct Model {
     old_mouse_pos: (f32, f32),
     translate: (f32, f32),
     square_size: f32,
-    selected_nuklid: Option<Nuklid>,
+    reaction_chain: Vec<Nuklid>,
 }
 
 fn model(app: &App) -> Model {
@@ -60,7 +60,7 @@ fn model(app: &App) -> Model {
         old_mouse_pos: (app.mouse.x, app.mouse.y),
         translate: (0., 0.),
         square_size: 50.,
-        selected_nuklid: None,
+        reaction_chain: vec![],
     }
 }
 
@@ -71,9 +71,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
     //Draw Nuklids
     nuklid_display_engine::draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
-     if let Some(sel) = &model.selected_nuklid {
-        draw_reaction(&view, &model.square_size, sel, &model.nuklids, 200);
-    }
+    draw_reaction(&view, &model.square_size, &model.reaction_chain);
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
     draw_legend(&view, &model.square_size);
