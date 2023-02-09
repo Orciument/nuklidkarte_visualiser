@@ -42,8 +42,9 @@ pub(crate) fn print_equation(model: &Model, nuklid: &Nuklid, lifetime: u8) {
 pub fn draw_reaction(draw: &Draw, square_size: &f32, chain: &Vec<Nuklid>) {
     for i in 0..chain.len() {
         overdraw_nuklid(draw, square_size, &chain[i]);
-        let child_p_n = ((chain[i].protonen as i16 + chain[i].zerfalls_art.delta_prot() as i16) as u8, (chain[i].neutronen as i16 + chain[i].zerfalls_art.delta_neut() as i16) as u8);
-        draw_arrows(draw, square_size, &chain[i], &child_p_n.1, &child_p_n.0)
+        if let Some(child) = chain.get(i+1) {
+            draw_arrows(draw, square_size, &chain[i], &child.neutronen, &child.protonen);
+        }
     }
 }
 
