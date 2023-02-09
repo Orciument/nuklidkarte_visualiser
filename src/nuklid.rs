@@ -66,7 +66,13 @@ impl Nuklid {
             .font_size((square_size * 0.3) as FontSize)
             .z(20.)
             .color(WHITE);
+    }
 
+    pub const fn abs_child(&self) -> (u8, u8) {
+        (
+            (self.protonen as i8 + self.zerfalls_art.delta_prot()) as u8,
+            (self.neutronen as i8 + self.zerfalls_art.delta_neut()) as u8
+        )
     }
 }
 

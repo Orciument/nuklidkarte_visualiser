@@ -78,11 +78,7 @@ fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nukli
         Some(x) => x
     };
 
-    //TODO should be able to make the addition in i8 instead
-    let child_p_n = (
-        (parent.protonen as i16 + parent.zerfalls_art.delta_prot() as i16) as u8,
-        (parent.neutronen as i16 + parent.zerfalls_art.delta_neut() as i16) as u8
-    );
+    let child_p_n = parent.abs_child();
 
     let child = match (
         match map.get(&child_p_n.0) {
