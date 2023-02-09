@@ -182,10 +182,6 @@ pub fn draw_legend(draw: &Draw, square_size: &f32) {
 }
 
 pub fn clicked_on_sources(app: &App, model: &mut Model) {
-    if !app.mouse.buttons.left().is_down() {
-        return;
-    }
-
     let window_size = app.main_window().inner_size_points();
     // - Translated Origin * Flipped Origin + Translated Display (where the mouse is, while
     // rendering only what is visible is displayed and is shown in the bottom left corner as always

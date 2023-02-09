@@ -7,26 +7,23 @@ use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::geom::Point2;
 
-use crate::{Model, print_reaction_equation};
 use crate::draw_legend::clicked_on_sources;
+use crate::Model;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::*;
+use crate::print_reaction_equation::print_equation;
 
 pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
-    find_hovered_element(app, model);
-    clicked_on_sources(app, model);
-    pressed_middle(model, mouse_button);
-}
-
-fn pressed_middle(model: &mut Model, mouse_button: MouseButton) {
-    if mouse_button != MouseButton::Middle { return; }
-
-    let nuklid = match &model.selected_nuklid {
-        None => return,
-        Some(x) => x
-    };
-    println!();
-    print_reaction_equation::print_equation(model, nuklid, 200);
+    match mouse_button {
+        MouseButton::Left => {
+            find_hovered_element(app, model);
+            clicked_on_sources(app, model);
+        }
+        MouseButton::Middle => {
+            print_equation(&model.reaction_chain);
+        }
+        _ => {}
+    }
 }
 
 pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
@@ -39,10 +36,6 @@ pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta
 
 
 fn find_hovered_element(app: &App, model: &mut Model) {
-    if !app.mouse.buttons.left().is_down() {
-        return;
-    }
-
     let nuklids: &HashMap<u8, HashMap<u8, Nuklid>> = &model.nuklids;
 
     let window_size = app.main_window().inner_size_points();
