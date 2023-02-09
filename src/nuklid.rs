@@ -2,11 +2,18 @@
 
 use std::fmt::{Display, Formatter};
 
-use nannou::color::{DIMGRAY, WHITE};
-use nannou::prelude::Srgb;
+use nannou::color::{BLACK, DIMGRAY, WHITE};
+use nannou::Draw;
+use nannou::prelude::{Point2, Srgb};
+use nannou::text::FontSize;
 
 use crate::nuklid::ZerfallsArt::*;
 use crate::subsup::super_ignore_unable;
+
+pub const BACKGROUND: Srgb<u8> = BLACK;
+pub const OUTER_SCALE: f32 = 0.95;
+pub const INNER_SCALE: f32 = 0.82;
+
 
 #[derive(Debug, Clone)]
 pub struct Nuklid {
@@ -21,6 +28,51 @@ impl Display for Nuklid {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let number = self.neutronen as u16 + self.protonen as u16;
         write!(f, "{}", super_ignore_unable(number.to_string()) + &self.name)
+    }
+}
+
+impl Nuklid {
+    pub fn draw(&self, draw: &Draw, square_size: &f32, overwrite_x_y: Option<(f32, f32)>) {
+        let xy = match overwrite_x_y {
+            None => (
+                self.neutronen as f32 * square_size + (square_size * 0.5),
+                self.protonen as f32 * square_size + (square_size * 0.5)
+            ),
+            Some(x) => x
+        };
+        // draw.quad()
+        //     .w_h(square_size, square_size)
+        //     .x_y(x,y)
+        //     .color(DIMGRAY);
+
+        let outer_square_w_h = square_size * OUTER_SCALE;
+        draw.quad()
+            .w_h(outer_square_w_h, outer_square_w_h)
+            .xy(Point2::from(xy))
+            .z(10.)
+            .color(self.zerfalls_art.color());
+
+        let inner_square_w_h = square_size * INNER_SCALE;
+        draw.quad()
+            .w_h(inner_square_w_h, inner_square_w_h)
+            .xy(Point2::from(xy))
+            .z(20.)
+            .color(BACKGROUND);
+
+        let number = self.neutronen as u16 + self.protonen as u16;
+        draw.text(&*(super_ignore_unable(number.to_string()) + &self.name))
+            .xy(Point2::from(xy))
+            .center_justify()
+            .font_size((square_size * 0.3) as FontSize)
+            .z(20.)
+            .color(WHITE);
+    }
+
+    pub const fn abs_child(&self) -> (u8, u8) {
+        (
+            (self.protonen as i8 + self.zerfalls_art.delta_prot()) as u8,
+            (self.neutronen as i8 + self.zerfalls_art.delta_neut()) as u8
+        )
     }
 }
 

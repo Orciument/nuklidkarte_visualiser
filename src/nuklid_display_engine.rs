@@ -7,7 +7,6 @@ use nannou::prelude::{BLACK, Srgb, ToPrimitive, WHITE};
 use nannou::text::FontSize;
 
 use crate::nuklid::Nuklid;
-use crate::subsup;
 
 pub const BACKGROUND: Srgb<u8> = BLACK;
 pub const OUTER_SCALE: f32 = 0.95;
@@ -33,20 +32,9 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
                 None => continue,
                 Some(x) => x
             };
-            draw_nuklid(draw,
-                        nuklid,
-                        j as f32 * square_size + (square_size * 0.5),
-                        i as f32 * square_size + (square_size * 0.5),
-                        &square_size,
-            );
+            nuklid.draw(draw, &square_size, None);
         }
     }
-}
-
-pub fn draw_nuklid(draw: &Draw, nuklid: &Nuklid, x: f32, y: f32, square_size: &f32) {
-    let super_string = subsup::super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
-    let name = super_string + &*nuklid.name;
-    draw_card(draw, x, y, square_size, &name, nuklid.zerfalls_art.color(), &0.3)
 }
 
 pub fn draw_card(draw: &Draw, x: f32, y: f32, square_size: &f32, text: &str, tile_color: Srgb<u8>, font_size_fac: &f32) {
