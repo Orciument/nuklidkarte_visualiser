@@ -9,7 +9,7 @@ use crate::datastring;
 use crate::nuklid::{Nuklid, ZerfallsArt};
 
 //Advanced Nuklid Struct
-pub fn deserialize_ad_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
+pub fn deserialize_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
     let mut y_achse_map: HashMap<u8, HashMap<u8, Nuklid>> = HashMap::new();
 
     // Get the Array Containing the Nuklids
@@ -19,7 +19,7 @@ pub fn deserialize_ad_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
         //Get Nuklid Json out of the Nuklid Json Array
         let element: &JsonValue = json_array.index(i);
         //Parse JSON to Nuklid Struct
-        let nuklid_struct: Nuklid = translate_to_ad_struct(element);
+        let nuklid_struct: Nuklid = translate_to_struct(element);
         //Insert Nuklid into the correct Hashmaps
         let protonen = nuklid_struct.protonen;
 
@@ -37,7 +37,7 @@ pub fn deserialize_ad_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
     y_achse_map
 }
 
-fn translate_to_ad_struct(element: &JsonValue) -> Nuklid {
+fn translate_to_struct(element: &JsonValue) -> Nuklid {
     let mut vec: Vec<(&str, &JsonValue)> = vec![];
     for entry in element.entries() {
         vec.push(entry);
