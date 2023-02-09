@@ -45,6 +45,7 @@ pub struct Model {
     translate: (f32, f32),
     square_size: f32,
     selected_nuklid: Option<Nuklid>,
+    reaction_chain: Vec<Nuklid>,
 }
 
 fn model(app: &App) -> Model {
@@ -61,6 +62,7 @@ fn model(app: &App) -> Model {
         translate: (0., 0.),
         square_size: 50.,
         selected_nuklid: None,
+        reaction_chain: vec![],
     }
 }
 

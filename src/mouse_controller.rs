@@ -10,6 +10,7 @@ use nannou::geom::Point2;
 use crate::{Model, print_reaction_equation};
 use crate::draw_legend::clicked_on_sources;
 use crate::nuklid::Nuklid;
+use crate::nuklid::ZerfallsArt::*;
 
 pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
     find_hovered_element(app, model);
@@ -75,6 +76,39 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     };
 
     model.selected_nuklid = Some(nuklid.clone());
+    model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
+    eprintln!("{:?}", model.reaction_chain);
+    //TODO hier die Chain finden!
+}
+
+fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
+    let parent = match vec.last() {
+        None => return vec![],
+        Some(x) => x
+    };
+
+    //TODO should be able to make the addition in i8 instead
+    let child_p_n = (
+        (parent.protonen as i16 + parent.zerfalls_art.delta_prot() as i16) as u8,
+        (parent.neutronen as i16 + parent.zerfalls_art.delta_neut() as i16) as u8
+    );
+
+    let child = match (
+        match map.get(&child_p_n.0) {
+            Some(x) => x,
+            None => return vec![],
+        }
+    ).get(&child_p_n.1) {
+        Some(x) => x,
+        None => return vec![],
+    };
+    vec.push(child.clone());
+
+    //Return if Element is Stable of has no Path
+    match &child.zerfalls_art {
+        SF | Stable | Unknown => { return vec; }
+        _ => advance_decay_chain(vec, map)
+    }
 }
 
 fn drag_viewport(app: &App, model: &mut Model) {
