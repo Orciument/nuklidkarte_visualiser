@@ -17,4 +17,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build
+    - uses: Swatinem/rust-cache@v2.2.0
+    - run: cargo build
