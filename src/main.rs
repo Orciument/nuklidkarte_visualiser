@@ -8,7 +8,7 @@ use crate::draw_legend::{draw_axes, draw_legend};
 use crate::mouse_controller::*;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::BetaPlus;
-use crate::nuklid_json_deserializer::deserialize_ad_to_map;
+use crate::nuklid_json_deserializer::deserialize_to_map;
 use crate::print_reaction_equation::{draw_reaction};
 
 mod nuklid;
@@ -55,7 +55,7 @@ fn model(app: &App) -> Model {
         .build().unwrap();
     Model {
         window,
-        nuklids: deserialize_ad_to_map(),
+        nuklids: deserialize_to_map(),
         old_mouse_pos: (app.mouse.x, app.mouse.y),
         translate: (0., 0.),
         square_size: 50.,
