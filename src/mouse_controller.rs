@@ -2,13 +2,13 @@
 
 use std::collections::HashMap;
 
-use nannou::App;
-use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::event::MouseScrollDelta::LineDelta;
+use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::geom::Point2;
+use nannou::App;
 
 use crate::draw_legend::clicked_on_sources;
-use crate::Model;
+use crate::model::Model;
 use crate::nuklid::Nuklid;
 use crate::nuklid::ZerfallsArt::*;
 use crate::print_reaction_equation::print_equation;
@@ -26,11 +26,11 @@ pub fn mouse_clicked(app: &App, model: &mut Model, mouse_button: MouseButton) {
     }
 }
 
-pub fn mouse_moved(app: &App, model: &mut Model, point: Point2) {
+pub fn mouse_moved(app: &App, model: &mut Model, _point: Point2) {
     drag_viewport(app, model);
 }
 
-pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, touch_phase: TouchPhase) {
+pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta, _touch_phase: TouchPhase) {
     scroll_scale_viewport(app, model, scroll_delta);
 }
 
@@ -58,12 +58,12 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     model.reaction_chain.clear();
 
     //Check if Nuklid exists, and get if it exists
-    let nuklid = match (
-        match nuklids.get(&y_index) {
-            Some(x) => x,
-            None => return,
-        }
-    ).get(&x_index) {
+    let nuklid = match (match nuklids.get(&y_index) {
+        Some(x) => x,
+        None => return,
+    })
+    .get(&x_index)
+    {
         Some(x) => x,
         None => return,
     };
@@ -72,20 +72,20 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
 }
 
-fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
+pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
     let parent = match vec.last() {
         None => return vec,
-        Some(x) => x
+        Some(x) => x,
     };
 
     let child_p_n = parent.abs_child();
 
-    let child = match (
-        match map.get(&child_p_n.0) {
-            Some(x) => x,
-            None => return vec,
-        }
-    ).get(&child_p_n.1) {
+    let child = match (match map.get(&child_p_n.0) {
+        Some(x) => x,
+        None => return vec,
+    })
+    .get(&child_p_n.1)
+    {
         Some(x) => x,
         None => return vec,
     };
@@ -93,8 +93,10 @@ fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nukli
 
     //Return if Element is Stable of has no Path
     match &child.zerfalls_art {
-        SF | Stable | Unknown => { return vec; }
-        _ => advance_decay_chain(vec, map)
+        SF | Stable | Unknown => {
+            return vec;
+        }
+        _ => advance_decay_chain(vec, map),
     }
 }
 
@@ -127,7 +129,9 @@ fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScroll
     if let LineDelta(_, y) = scroll_delta {
         //Compute new Square size
         let new_size = model.square_size + (y * 2.);
-        if new_size <= 4. { return; }
+        if new_size <= 4. {
+            return;
+        }
         let old_square_size = model.square_size;
         model.square_size = new_size;
 
@@ -142,15 +146,30 @@ fn scroll_scale_viewport(app: &App, model: &mut Model, scroll_delta: MouseScroll
 
         let window_size = app.main_window().inner_size_points();
         //Number of Nuklids that fit on the screen bevor size change
-        let fits_square_old = (window_size.0 / old_square_size, window_size.1 / old_square_size);
+        let fits_square_old = (
+            window_size.0 / old_square_size,
+            window_size.1 / old_square_size,
+        );
         //Number of Nuklids that fit on the screen after size change
-        let fits_square_new = (window_size.0 / model.square_size, window_size.1 / model.square_size);
+        let fits_square_new = (
+            window_size.0 / model.square_size,
+            window_size.1 / model.square_size,
+        );
         //Amount of Nuklids that now do(not) fit
-        let delta_fits = (fits_square_old.0 - fits_square_new.0, fits_square_old.1 - fits_square_new.1);
+        let delta_fits = (
+            fits_square_old.0 - fits_square_new.0,
+            fits_square_old.1 - fits_square_new.1,
+        );
         //Amount of Pixel that we need to translate more than bevor
-        let needed_px_change = (model.square_size * delta_fits.0 * 0.5, model.square_size * delta_fits.1 * 0.5);
+        let needed_px_change = (
+            model.square_size * delta_fits.0 * 0.5,
+            model.square_size * delta_fits.1 * 0.5,
+        );
         //Adjusted Translation
-        let new_translate = (model.translate.0 + needed_px_change.0, model.translate.1 + needed_px_change.1);
+        let new_translate = (
+            model.translate.0 + needed_px_change.0,
+            model.translate.1 + needed_px_change.1,
+        );
         model.translate = new_translate;
 
         //Limit translation

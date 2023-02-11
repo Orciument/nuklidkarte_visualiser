@@ -1,19 +1,19 @@
-use nannou::Draw;
 use nannou::color::BLACK;
 use nannou::geom::vec2;
 use nannou::prelude::{pt2, WHITE};
 use nannou::text::FontSize;
+use nannou::Draw;
 
-use crate::math_vec::scale_vec2;
+use crate::math::math_vec::scale_vec2;
 use crate::nuklid::Nuklid;
-use crate::nuklid::ZerfallsArt::{SF, Stable, Unknown};
-use crate::subsup::super_ignore_unable;
+use crate::nuklid::ZerfallsArt::{Stable, Unknown, SF};
+use crate::subsup::subsup::super_ignore_unable;
 
 pub fn print_equation(chain: &Vec<Nuklid>) {
     println!();
-    for i in 0..chain.len()-1 {
-        let parent =  &chain[i];
-        let child =  &chain[i+1];
+    for i in 0..chain.len() - 1 {
+        let parent = &chain[i];
+        let child = &chain[i + 1];
         println!("{} -> {}", parent, child);
     }
 }
@@ -21,30 +21,39 @@ pub fn print_equation(chain: &Vec<Nuklid>) {
 pub fn draw_reaction(draw: &Draw, square_size: &f32, chain: &Vec<Nuklid>) {
     for i in 0..chain.len() {
         overdraw_nuklid(draw, square_size, &chain[i]);
-        if let Some(child) = chain.get(i+1) {
-            draw_arrows(draw, square_size, &chain[i], &child.neutronen, &child.protonen);
+        if let Some(child) = chain.get(i + 1) {
+            draw_arrows(
+                draw,
+                square_size,
+                &chain[i],
+                &child.neutronen,
+                &child.protonen,
+            );
         }
     }
 }
-
 
 fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8) {
     //Translated Draw
     let draw_t = draw.x_y(square_size * 0.5, square_size * 0.5).to_owned();
 
-    let p_start = pt2(nuklid.neutronen as f32 * square_size, nuklid.protonen as f32 * square_size);
+    let p_start = pt2(
+        nuklid.neutronen as f32 * square_size,
+        nuklid.protonen as f32 * square_size,
+    );
     let p_end = pt2(*nt as f32 * square_size, *pt as f32 * square_size);
 
     match nuklid.zerfalls_art {
         Stable | Unknown | SF => {}
         _ => {
             // Draw line
-            draw_t.z(30.).line()
+            draw_t
+                .z(30.)
+                .line()
                 .start(p_start)
                 .end(p_end)
                 .color(BLACK)
-                .weight(square_size * 0.3)
-            ;
+                .weight(square_size * 0.3);
 
             //Vector between mid points of parent and child nuclide
             let delta_vec = vec2(p_end.x - p_start.x, p_end.y - p_start.y);
@@ -86,15 +95,16 @@ fn draw_arrows(draw: &Draw, square_size: &f32, nuklid: &Nuklid, nt: &u8, pt: &u8
             //     .head_length(square_size * 0.41)
             //     .caps_round()
             // ;
-            draw_t.z(50.).arrow()
+            draw_t
+                .z(50.)
+                .arrow()
                 .start(new_start)
                 .end(new_end)
                 .color(nuklid.zerfalls_art.color())
                 .weight(square_size * 0.1)
                 .head_width(square_size * 0.1)
                 .head_length(square_size * 0.4)
-                .caps_round()
-            ;
+                .caps_round();
         }
     }
 }
@@ -103,7 +113,10 @@ fn overdraw_nuklid(draw: &Draw, square_size: &f32, nuklid: &Nuklid) {
     //Translated Draw
     let draw_t = draw.x_y(square_size * 0.5, square_size * 0.5).to_owned();
 
-    let p_nuklid = pt2(nuklid.neutronen as f32 * square_size, nuklid.protonen as f32 * square_size);
+    let p_nuklid = pt2(
+        nuklid.neutronen as f32 * square_size,
+        nuklid.protonen as f32 * square_size,
+    );
 
     // draw.x_y(square_size*0.5, square_size*0.5)
     // .z(30.)
@@ -115,26 +128,34 @@ fn overdraw_nuklid(draw: &Draw, square_size: &f32, nuklid: &Nuklid) {
     // .w_h(5., 5.);
 
     //Over Draw the Reacting Nuklids
-    draw_t.z(25.).quad()
+    draw_t
+        .z(25.)
+        .quad()
         .xy(p_nuklid)
         .w_h(*square_size, *square_size)
         .color(BLACK);
 
     let inner_square_w_h = square_size * 0.9;
-    draw_t.z(40.).ellipse()
+    draw_t
+        .z(40.)
+        .ellipse()
         .xy(p_nuklid)
         .w_h(*square_size, *square_size)
         .color(nuklid.zerfalls_art.color());
 
-    draw_t.z(40.).ellipse()
+    draw_t
+        .z(40.)
+        .ellipse()
         .xy(p_nuklid)
         .w_h(inner_square_w_h, inner_square_w_h)
         .color(BLACK);
 
-
-    let super_string = super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
+    let super_string =
+        super_ignore_unable((nuklid.neutronen as u16 + nuklid.protonen as u16).to_string());
     let name = super_string + &*nuklid.name;
-    draw_t.z(40.).text(&*name)
+    draw_t
+        .z(40.)
+        .text(&*name)
         .xy(p_nuklid)
         .center_justify()
         .font_size((square_size / 3.) as FontSize)

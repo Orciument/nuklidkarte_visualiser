@@ -1,49 +1,37 @@
 #![deny(unsafe_code)]
 
-use std::collections::HashMap;
-
 use nannou::prelude::*;
 
+use crate::data::nuklid_json_deserializer::deserialize_to_map;
 use crate::draw_legend::{draw_axes, draw_legend};
+use crate::model::Model;
 use crate::mouse_controller::*;
-use crate::nuklid::Nuklid;
-use crate::nuklid::ZerfallsArt::BetaPlus;
-use crate::nuklid_json_deserializer::deserialize_to_map;
-use crate::print_reaction_equation::{draw_reaction};
+use crate::print_reaction_equation::draw_reaction;
 
+mod data;
+mod draw_legend;
+mod math;
+mod model;
+mod mouse_controller;
 mod nuklid;
 mod nuklid_display_engine;
-mod mouse_controller;
-mod nuklid_json_deserializer;
-mod subsup;
-mod datastring;
 mod print_reaction_equation;
-mod math_vec;
-mod draw_legend;
+mod subsup;
 
 #[macro_export]
 macro_rules! unwrap_or_return {
     ($opt:expr) => {
         match $opt {
-        Ok(x) => x,
-        Err(_) => { return; }
-    };
+            Ok(x) => x,
+            Err(_) => {
+                return;
+            }
+        };
     };
 }
 
 fn main() {
-    nannou::app(model)
-        .run();
-}
-
-#[allow(dead_code)]
-pub struct Model {
-    window: WindowId,
-    nuklids: HashMap<u8, HashMap<u8, Nuklid>>,
-    old_mouse_pos: (f32, f32),
-    translate: (f32, f32),
-    square_size: f32,
-    reaction_chain: Vec<Nuklid>,
+    nannou::app(model).run();
 }
 
 fn model(app: &App) -> Model {

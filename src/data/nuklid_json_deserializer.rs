@@ -5,7 +5,7 @@ use std::ops::Index;
 
 use json::JsonValue;
 
-use crate::datastring;
+use crate::data::datastring;
 use crate::nuklid::{Nuklid, ZerfallsArt};
 
 //Advanced Nuklid Struct
@@ -47,7 +47,7 @@ fn translate_to_struct(element: &JsonValue) -> Nuklid {
     Nuklid {
         name: vec[2].1.to_string(),
         neutronen: vec[1].1.as_u8().unwrap(), //n
-        protonen: vec[0].1.as_u8().unwrap(), //z
+        protonen: vec[0].1.as_u8().unwrap(),  //z
         life: vec[3].1.to_string(),
         zerfalls_art: ZerfallsArt::parse_from_string(vec[4].1.as_str().unwrap()),
     }

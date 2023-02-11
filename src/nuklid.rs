@@ -3,17 +3,16 @@
 use std::fmt::{Display, Formatter};
 
 use nannou::color::{BLACK, DIMGRAY, WHITE};
-use nannou::Draw;
 use nannou::prelude::{Point2, Srgb};
 use nannou::text::FontSize;
+use nannou::Draw;
 
 use crate::nuklid::ZerfallsArt::*;
-use crate::subsup::super_ignore_unable;
+use crate::subsup::subsup::super_ignore_unable;
 
 pub const BACKGROUND: Srgb<u8> = BLACK;
 pub const OUTER_SCALE: f32 = 0.95;
 pub const INNER_SCALE: f32 = 0.82;
-
 
 #[derive(Debug, Clone)]
 pub struct Nuklid {
@@ -113,7 +112,7 @@ impl ZerfallsArt {
             BetaMinusN2 => 2,
             SF => 0,
             Stable => 0,
-            Unknown => 0
+            Unknown => 0,
         };
     }
 
@@ -133,25 +132,55 @@ impl ZerfallsArt {
             BetaMinusN2 => -3,
             SF => 0,
             Stable => 0,
-            Unknown => 0
+            Unknown => 0,
         };
     }
 
     pub fn color(&self) -> Srgb<u8> {
         return match self {
-            Alpha => Srgb { red: 254, green: 255, blue: 69, standard: Default::default() },
-            BetaPlus => Srgb { red: 238, green: 58, blue: 250, standard: Default::default() },
+            Alpha => Srgb {
+                red: 254,
+                green: 255,
+                blue: 69,
+                standard: Default::default(),
+            },
+            BetaPlus => Srgb {
+                red: 238,
+                green: 58,
+                blue: 250,
+                standard: Default::default(),
+            },
             BetaPlus2 => BetaPlus.color(),
-            P => Srgb { red: 237, green: 47, blue: 32, standard: Default::default() },
+            P => Srgb {
+                red: 237,
+                green: 47,
+                blue: 32,
+                standard: Default::default(),
+            },
             P2 => P.color(),
             BetaPlusP => BetaPlus.color(),
-            BetaMinus => Srgb { red: 65, green: 106, blue: 249, standard: Default::default() },
+            BetaMinus => Srgb {
+                red: 65,
+                green: 106,
+                blue: 249,
+                standard: Default::default(),
+            },
             BetaMinus2 => BetaMinus.color(),
-            N => Srgb { red: 118, green: 200, blue: 72, standard: Default::default() },
+            N => Srgb {
+                red: 118,
+                green: 200,
+                blue: 72,
+                standard: Default::default(),
+            },
             N2 => N.color(),
             BetaMinusN => BetaMinus.color(),
             BetaMinusN2 => BetaMinus.color(),
-            SF => Srgb { red: 220, green: 138, blue: 162, standard: Default::default() },
+            SF => Srgb {
+                red: 220,
+                green: 138,
+                blue: 162,
+                standard: Default::default(),
+            },
             Stable => WHITE,
             Unknown => DIMGRAY,
         };
@@ -176,7 +205,10 @@ impl ZerfallsArt {
             "2B+" => BetaPlus2,
             "SF" => SF,
             "S" => Stable,
-            &_ => { /*eprintln!("Rest Triggert: {}", str);*/ Unknown }
+            &_ => {
+                /*eprintln!("Rest Triggert: {}", str);*/
+                Unknown
+            }
         };
     }
 }
