@@ -2,6 +2,8 @@
 This is my first rust project and is more for my own learning instead of being an actual product.
 I was inspired to do this project while working with nuclide tables in physics class. 
 
+This Project renders the Nuclide Map with each Nuclide being color coded and clickable to print the decay chain into the command Line.
+
 ## Sources
 ### Primary source
 - https://www-nds.iaea.org/relnsd/vcharthtml/VChartHTML.html
