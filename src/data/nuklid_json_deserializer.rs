@@ -2,11 +2,43 @@
 
 use std::collections::HashMap;
 use std::ops::Index;
-
 use json::JsonValue;
 
 use crate::data::datastring;
 use crate::nuklid::{Nuklid, ZerfallsArt};
+
+pub fn new_deserialize() -> Vec<(u8, Vec<Option<Nuklid>>)>{
+    let map = deserialize_to_map();
+    let mut y: Vec<(u8, Vec<Option<Nuklid>>)> = Vec::with_capacity(map.len());
+    let mut x_keys = map.keys().map(|x| { *x }).collect::<Vec<u8>>();
+    x_keys.sort();
+
+    for x_key in x_keys {
+        y.push(map_to_vec(map.get(&x_key).unwrap().clone()))
+    }
+
+    y.shrink_to_fit();
+    y
+}
+
+pub fn map_to_vec(x_map: HashMap<u8, Nuklid>) -> (u8, Vec<Option<Nuklid>>) {
+    let mut vec = Vec::with_capacity(x_map.len());
+    let mut x_keys = x_map.keys().map(|x| { *x }).collect::<Vec<u8>>();
+    x_keys.sort();
+
+    let min = *x_keys.first().unwrap();
+    let mut lastkey: u8 = min;
+    for x_key in x_keys {
+        while lastkey + 1 < x_key {
+            vec.push(None);
+            lastkey += 1 ;
+        }
+        lastkey = x_key;
+        vec.push(Option::from(x_map.get(&x_key).unwrap().clone()))
+    }
+    vec.shrink_to_fit();
+    (min, vec)
+}
 
 //Advanced Nuklid Struct
 pub fn deserialize_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
@@ -37,11 +69,13 @@ pub fn deserialize_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
     y_achse_map
 }
 
+
 fn translate_to_struct(element: &JsonValue) -> Nuklid {
-    let mut vec: Vec<(&str, &JsonValue)> = vec![];
-    for entry in element.entries() {
-        vec.push(entry);
-    }
+    let vec: Vec<(&str, &JsonValue)> = element.entries().collect();
+    // let mut vec: Vec<(&str, &JsonValue)> = vec![];
+    // for entry in element.entries() {
+    //     vec.push(entry);
+    // }
 
     //TODO Bunch of unsafe unwraps
     Nuklid {

@@ -1,11 +1,11 @@
 #![deny(unsafe_code)]
 
 use nannou::prelude::*;
-
-use crate::data::nuklid_json_deserializer::deserialize_to_map;
+use crate::data::nuklid_json_deserializer::new_deserialize;
 use crate::draw_legend::{draw_axes, draw_legend};
 use crate::model::Model;
 use crate::mouse_controller::*;
+use crate::nuklid_display_engine::draw_nuklid_map;
 use crate::print_reaction_equation::draw_reaction;
 
 mod data;
@@ -32,6 +32,8 @@ macro_rules! unwrap_or_return {
 
 fn main() {
     nannou::app(model).run();
+    //TODO make textures out of tiles at startup and render textrue
+    //maybe just overlap the once selected
 }
 
 fn model(app: &App) -> Model {
@@ -43,7 +45,7 @@ fn model(app: &App) -> Model {
         .build().unwrap();
     Model {
         window,
-        nuklids: deserialize_to_map(),
+        nuklids: new_deserialize(),
         old_mouse_pos: (app.mouse.x, app.mouse.y),
         translate: (0., 0.),
         square_size: 50.,
@@ -57,7 +59,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let view: Draw = translate_to_view(&draw, &model);
 
     //Draw Nuklids
-    nuklid_display_engine::draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
+    draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
     draw_reaction(&view, &model.square_size, &model.reaction_chain);
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());

@@ -1,7 +1,5 @@
 #![deny(unsafe_code)]
 
-use std::collections::HashMap;
-
 use nannou::event::MouseScrollDelta::LineDelta;
 use nannou::event::{MouseButton, MouseScrollDelta, TouchPhase};
 use nannou::geom::Point2;
@@ -35,7 +33,7 @@ pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta
 }
 
 fn find_hovered_element(app: &App, model: &mut Model) {
-    let nuklids: &HashMap<u8, HashMap<u8, Nuklid>> = &model.nuklids;
+    let nuklids: &Vec<(u8, Vec<Option<Nuklid>>)> = &model.nuklids;
 
     let window_size = app.main_window().inner_size_points();
     // - Translated Origin * Flipped Origin + Translated Display (where the mouse is, while
@@ -58,21 +56,22 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     model.reaction_chain.clear();
 
     //Check if Nuklid exists, and get if it exists
-    let nuklid = match (match nuklids.get(&y_index) {
-        Some(x) => x,
+    let x_vec = match nuklids.get(y_index as usize) {
+        Some(x) => x.1.clone(),
         None => return,
-    })
-    .get(&x_index)
-    {
-        Some(x) => x,
+    };
+    let nuklid = match x_vec.get(x_index as usize) {
+        Some(Some(x)) => x,
+        Some(None) => return,
         None => return,
     };
 
+    //TODO
     //Save the new selection (and chain)
     model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
 }
 
-pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, Nuklid>>) -> Vec<Nuklid> {
+pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &Vec<(u8, Vec<Option<Nuklid>>)>) -> Vec<Nuklid> {
     let parent = match vec.last() {
         None => return vec,
         Some(x) => x,
@@ -80,13 +79,13 @@ pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &HashMap<u8, HashMap<u8, N
 
     let child_p_n = parent.abs_child();
 
-    let child = match (match map.get(&child_p_n.0) {
-        Some(x) => x,
+    let binding = match map.get(child_p_n.0 as usize) {
+        Some(x) => x.1.clone(),
         None => return vec,
-    })
-    .get(&child_p_n.1)
-    {
-        Some(x) => x,
+    };
+    let child = match binding.get(child_p_n.1 as usize) {
+        Some(Some(x)) => x,
+        Some(None) => return vec,
         None => return vec,
     };
     vec.push(child.clone());

@@ -1,7 +1,5 @@
 #![deny(unsafe_code)]
 
-use std::collections::HashMap;
-
 use nannou::Draw;
 use nannou::prelude::{BLACK, Srgb, ToPrimitive, WHITE};
 use nannou::text::FontSize;
@@ -12,8 +10,8 @@ pub const BACKGROUND: Srgb<u8> = BLACK;
 pub const OUTER_SCALE: f32 = 0.95;
 pub const INNER_SCALE: f32 = 0.82;
 
-pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, &square_size: &f32,
-    translation: &(f32, f32), &window_size: &(u32, u32), ) {
+pub fn draw_nuklid_map(draw: &Draw, nuklids: &Vec<(u8, Vec<Option<Nuklid>>)>, &square_size: &f32,
+                       translation: &(f32, f32), &window_size: &(u32, u32), ) {
 
     //Zeichne nur alle Reihen die auch überhaupt auf dem Bildschirm angezeigt werden
     //Mit Y Verschiebung/Constrains
@@ -27,16 +25,20 @@ pub fn draw_nuklid_map(draw: &Draw, nuklids: &HashMap<u8, HashMap<u8, Nuklid>>, 
         .unwrap_or(u8::MAX);
 
     for i in y_lower_bound..y_upper_bound {
-        // println!("{}", i);
-        let x_achsen_map = match nuklids.get(&(*&i)) {
+        let x_vec = match nuklids.get(i as usize) {
             None => continue,
             Some(x) => x,
         };
         //Mit X Verschiebung/Constrains
         for j in x_lower_bound..x_upper_bound {
-            let nuklid = match x_achsen_map.get(&j) {
-                None => continue,
-                Some(x) => x,
+            let index = j as i16 - x_vec.0 as i16;
+            if index < 0 { continue; }
+            let nuklid = match x_vec.1.get((index) as usize) {
+                Some(Some(x)) => x,
+                Some(None) => continue,
+                None => {
+                    continue;
+                }
             };
             nuklid.draw(draw, &square_size, None);
         }
