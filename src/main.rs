@@ -59,7 +59,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let view: Draw = translate_to_view(&draw, &model);
 
     //Draw Nuklids
-    draw_nuklid_map(&view, &model.nuklids, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
+    draw_nuklid_map(&view, model.nuklids.as_ref(), &model.square_size, &model.translate, &app.main_window().inner_size_pixels());
     draw_reaction(&view, &model.square_size, &model.reaction_chain);
 
     draw_axes(&view, &model.square_size, &model.translate, &app.main_window().inner_size_pixels());

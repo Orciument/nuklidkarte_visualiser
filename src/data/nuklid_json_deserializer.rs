@@ -7,9 +7,9 @@ use json::JsonValue;
 use crate::data::datastring;
 use crate::nuklid::{Nuklid, ZerfallsArt};
 
-pub fn new_deserialize() -> Vec<(u8, Vec<Option<Nuklid>>)>{
+pub fn new_deserialize() -> Box<[(u8, Box<[Option<Nuklid>]>)]>{
     let map = deserialize_to_map();
-    let mut y: Vec<(u8, Vec<Option<Nuklid>>)> = Vec::with_capacity(map.len());
+    let mut y: Vec<(u8, Box<[Option<Nuklid>]>)> = Vec::with_capacity(map.len());
     let mut x_keys = map.keys().map(|x| { *x }).collect::<Vec<u8>>();
     x_keys.sort();
 
@@ -18,10 +18,10 @@ pub fn new_deserialize() -> Vec<(u8, Vec<Option<Nuklid>>)>{
     }
 
     y.shrink_to_fit();
-    y
+    y.into_boxed_slice()
 }
 
-pub fn map_to_vec(x_map: HashMap<u8, Nuklid>) -> (u8, Vec<Option<Nuklid>>) {
+pub fn map_to_vec(x_map: HashMap<u8, Nuklid>) -> (u8, Box<[Option<Nuklid>]>) {
     let mut vec = Vec::with_capacity(x_map.len());
     let mut x_keys = x_map.keys().map(|x| { *x }).collect::<Vec<u8>>();
     x_keys.sort();
@@ -37,7 +37,7 @@ pub fn map_to_vec(x_map: HashMap<u8, Nuklid>) -> (u8, Vec<Option<Nuklid>>) {
         vec.push(Option::from(x_map.get(&x_key).unwrap().clone()))
     }
     vec.shrink_to_fit();
-    (min, vec)
+    (min, vec.into_boxed_slice())
 }
 
 //Advanced Nuklid Struct

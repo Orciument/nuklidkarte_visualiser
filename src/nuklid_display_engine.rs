@@ -10,7 +10,7 @@ pub const BACKGROUND: Srgb<u8> = BLACK;
 pub const OUTER_SCALE: f32 = 0.95;
 pub const INNER_SCALE: f32 = 0.82;
 
-pub fn draw_nuklid_map(draw: &Draw, nuklids: &Vec<(u8, Vec<Option<Nuklid>>)>, &square_size: &f32,
+pub fn draw_nuklid_map(draw: &Draw, nuklids: &[(u8, Box<[Option<Nuklid>]>)], &square_size: &f32,
                        translation: &(f32, f32), &window_size: &(u32, u32), ) {
 
     //Zeichne nur alle Reihen die auch überhaupt auf dem Bildschirm angezeigt werden

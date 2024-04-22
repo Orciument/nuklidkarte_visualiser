@@ -33,7 +33,7 @@ pub fn mouse_scroll(app: &App, model: &mut Model, scroll_delta: MouseScrollDelta
 }
 
 fn find_hovered_element(app: &App, model: &mut Model) {
-    let nuklids: &Vec<(u8, Vec<Option<Nuklid>>)> = &model.nuklids;
+    let nuklids: &[(u8, Box<[Option<Nuklid>]>)] = model.nuklids.as_ref();
 
     let window_size = app.main_window().inner_size_points();
     // - Translated Origin * Flipped Origin + Translated Display (where the mouse is, while
@@ -71,7 +71,7 @@ fn find_hovered_element(app: &App, model: &mut Model) {
     model.reaction_chain = advance_decay_chain(vec![nuklid.clone()], nuklids);
 }
 
-pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &Vec<(u8, Vec<Option<Nuklid>>)>) -> Vec<Nuklid> {
+pub fn advance_decay_chain(mut vec: Vec<Nuklid>, map: &[(u8, Box<[Option<Nuklid>]>)]) -> Vec<Nuklid> {
     let parent = match vec.last() {
         None => return vec,
         Some(x) => x,
