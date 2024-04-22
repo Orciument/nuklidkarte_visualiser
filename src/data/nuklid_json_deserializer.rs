@@ -49,7 +49,7 @@ pub fn deserialize_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
 
     for i in 0..json_array.len() {
         //Get Nuklid Json out of the Nuklid Json Array
-        let element: &JsonValue = json_array.index(i);
+        let element: JsonValue = json_array.index(i).clone();
         //Parse JSON to Nuklid Struct
         let nuklid_struct: Nuklid = translate_to_struct(element);
         //Insert Nuklid into the correct Hashmaps
@@ -70,7 +70,7 @@ pub fn deserialize_to_map() -> HashMap<u8, HashMap<u8, Nuklid>> {
 }
 
 
-fn translate_to_struct(element: &JsonValue) -> Nuklid {
+fn translate_to_struct(element: JsonValue) -> Nuklid {
     let vec: Vec<(&str, &JsonValue)> = element.entries().collect();
     // let mut vec: Vec<(&str, &JsonValue)> = vec![];
     // for entry in element.entries() {
@@ -79,10 +79,10 @@ fn translate_to_struct(element: &JsonValue) -> Nuklid {
 
     //TODO Bunch of unsafe unwraps
     Nuklid {
-        name: vec[2].1.to_string(),
+        name: vec[2].1.to_string().into(),
         neutronen: vec[1].1.as_u8().unwrap(), //n
         protonen: vec[0].1.as_u8().unwrap(),  //z
-        life: vec[3].1.to_string(),
+        life: vec[3].1.to_string().into(),
         zerfalls_art: ZerfallsArt::parse_from_string(vec[4].1.as_str().unwrap()),
     }
 }

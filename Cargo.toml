@@ -6,11 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nannou = "0.18.1"
+nannou = "0.19.0"
 json = "0.12.4"
 open = "5.0.0"
-# use nix 0.26 to overwrite unsafe older version used by nannou?
-nix = "0.27.1"
 
 [dev-dependencies]
 criterion = "0.4.0"

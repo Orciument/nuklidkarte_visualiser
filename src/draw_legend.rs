@@ -100,50 +100,50 @@ pub fn draw_axes(draw: &Draw, square_size: &f32, &translation: &(f32, f32), &win
 pub fn draw_legend(draw: &Draw, square_size: &f32) {
     let alpha: Nuklid = Nuklid {
         zerfalls_art: Alpha,
-        name: "Be".to_string(),
-        life: "-".to_string(),
+        name: "Be".into(),
+        life: "-".into(),
         neutronen: 4,
         protonen: 4,
     };
     let beta_minus: Nuklid = Nuklid {
         zerfalls_art: BetaMinus,
-        name: "Li".to_string(),
-        life: "-".to_string(),
+        name: "Li".into(),
+        life: "-".into(),
         neutronen: 3,
         protonen: 5,
     };
     let beta_plus: Nuklid = Nuklid {
         zerfalls_art: BetaPlus,
-        name: "O".to_string(),
-        life: "-".to_string(),
+        name: "O".into(),
+        life: "-".into(),
         neutronen: 8,
         protonen: 7,
     };
     let stable: Nuklid = Nuklid {
         zerfalls_art: Stable,
-        name: "He".to_string(),
-        life: "-".to_string(),
+        name: "He".into(),
+        life: "-".into(),
         neutronen: 2,
         protonen: 2,
     };
     let p: Nuklid = Nuklid {
         zerfalls_art: P,
-        name: "Mg".to_string(),
-        life: "-".to_string(),
+        name: "Mg".into(),
+        life: "-".into(),
         neutronen: 12,
         protonen: 7,
     };
     let n: Nuklid = Nuklid {
         zerfalls_art: N,
-        name: "H".to_string(),
-        life: "-".to_string(),
+        name: "H".into(),
+        life: "-".into(),
         neutronen: 1,
         protonen: 3,
     };
     let _sf: Nuklid = Nuklid {
         zerfalls_art: SF,
-        name: "H".to_string(),
-        life: "-".to_string(),
+        name: "H".into(),
+        life: "-".into(),
         neutronen: 138,
         protonen: 96,
     };

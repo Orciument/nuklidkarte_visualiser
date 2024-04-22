@@ -17,8 +17,8 @@ pub const INNER_SCALE: f32 = 0.82;
 #[derive(Debug, Clone)]
 pub struct Nuklid {
     pub zerfalls_art: ZerfallsArt,
-    pub name: String,
-    pub life: String,
+    pub name: Box<str>,
+    pub life: Box<str>,
     pub neutronen: u8,
     pub protonen: u8,
 }
@@ -33,11 +33,10 @@ impl Display for Nuklid {
 impl Nuklid {
     pub fn draw(&self, draw: &Draw, square_size: &f32, overwrite_x_y: Option<(f32, f32)>) {
         let xy = match overwrite_x_y {
-            None => (
-                self.neutronen as f32 * square_size + (square_size * 0.5),
-                self.protonen as f32 * square_size + (square_size * 0.5)
-            ),
-            Some(x) => x
+            None => Point2::from(
+                (self.neutronen as f32 * square_size + (square_size * 0.5),
+                 self.protonen as f32 * square_size + (square_size * 0.5))),
+            Some(x) => Point2::from(x),
         };
         // draw.quad()
         //     .w_h(square_size, square_size)
@@ -47,20 +46,20 @@ impl Nuklid {
         let outer_square_w_h = square_size * OUTER_SCALE;
         draw.quad()
             .w_h(outer_square_w_h, outer_square_w_h)
-            .xy(Point2::from(xy))
+            .xy(xy)
             .z(10.)
             .color(self.zerfalls_art.color());
 
         let inner_square_w_h = square_size * INNER_SCALE;
         draw.quad()
             .w_h(inner_square_w_h, inner_square_w_h)
-            .xy(Point2::from(xy))
+            .xy(xy)
             .z(20.)
             .color(BACKGROUND);
 
         let number = self.neutronen as u16 + self.protonen as u16;
         draw.text(&*(super_ignore_unable(number.to_string()) + &self.name))
-            .xy(Point2::from(xy))
+            .xy(xy)
             .center_justify()
             .font_size((square_size * 0.3) as FontSize)
             .z(20.)
