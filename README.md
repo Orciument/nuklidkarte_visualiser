@@ -4,6 +4,9 @@ I was inspired to do this project while working with nuclide tables in physics c
 
 This Project renders the Nuclide Map with each Nuclide being color coded and clickable to print the decay chain into the command Line.
 
+> [!WARNING]
+> This project is no longer maintained and uses a library that has some vulnerabilities. Sadly the libary is not mainted anymore, and so i'm unable to fix the vulnerability on my side
+
 ## Sources
 ### Primary source
 - https://www-nds.iaea.org/relnsd/vcharthtml/VChartHTML.html
